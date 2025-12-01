@@ -16,7 +16,7 @@ namespace _02_Scripts.Building.Test
             {
                 var a = aaaParse[i];
                 var b = new BuildingEntity(a);
-                Debug.Log(b.ToDebugString());
+                // Debug.Log(b.ToDebugString());
 
             }
         }
