@@ -375,8 +375,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlPanel: {fileID: 846100050}
-  inventorySlotPrefab: {fileID: 971261942132891152, guid: 370d6d396dbba4f49be5deb13485d640, type: 3}
+  inventoryContainer: {fileID: 5596033907179263393}
+  inventorySlotPrefab: {fileID: 2136384602553987405, guid: 370d6d396dbba4f49be5deb13485d640, type: 3}
   inventorySlotAmount: 16
+  gachaButtonComponent: {fileID: 2140603202}
 --- !u!1 &905493942
 GameObject:
   m_ObjectHideFlags: 0

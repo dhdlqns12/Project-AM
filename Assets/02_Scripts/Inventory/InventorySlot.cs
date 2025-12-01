@@ -1,4 +1,5 @@
 using _02_Scripts.Building;
+using TMPro;
 using UnityEngine;
 
 namespace Inventory
@@ -6,10 +7,18 @@ namespace Inventory
     public class InventorySlot : MonoBehaviour
     {
         private BuildingEntity buildingEntity;
+        [SerializeField] private TextMeshProUGUI buildingNameText;
 
-        public void AddBuildingEntity(BuildingEntity buildingEntity)
+        public void SetBuildingEntity(BuildingEntity building)
         {
-            this.buildingEntity = buildingEntity;
+            this.buildingEntity = building;
+            buildingNameText.text = building.BuildingName;
+        }
+
+        public void Clear()
+        {
+            this.buildingEntity = null;
+            buildingNameText.text = "";
         }
 
     }

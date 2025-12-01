@@ -8,11 +8,14 @@ namespace Inventory
     public class InventoryComponent : MonoBehaviour
     {
         [SerializeField] private GameObject controlPanel;
+        [SerializeField] private GameObject inventoryContainer;
         [SerializeField] private GameObject inventorySlotPrefab;
         [SerializeField] private int inventorySlotAmount = 16;
         [SerializeField] private GameObject gachaButtonComponent;
 
         private List<InventorySlot> inventorySlots = new List<InventorySlot>();
+        private List<BuildingEntity> buildingData = new List<BuildingEntity>();
+
         private GachaBuilding gachaBuilding;
 
         private int lastInventorySlotIndex = -1;
@@ -28,10 +31,9 @@ namespace Inventory
 
         void Init()
         {
-            controlPanel.SetActive(false);
             for (int i = 0; i < inventorySlotAmount; i++)
             {
-                GameObject slot = Instantiate(inventorySlotPrefab, controlPanel.transform);
+                GameObject slot = Instantiate(inventorySlotPrefab, inventoryContainer.transform);
                 inventorySlots.Add(slot.GetComponent<InventorySlot>());
             }
 
@@ -44,15 +46,26 @@ namespace Inventory
 
         public void AddBuilding(BuildingEntity buildingEntity)
         {
-            if (lastInventorySlotIndex >= inventorySlotAmount) return;
-            inventorySlots[lastInventorySlotIndex + 1].AddBuildingEntity(buildingEntity);
-            Debug.Log($"{buildingEntity.ToDebugString()}");
+            if (lastInventorySlotIndex >= inventorySlotAmount - 1 ) return;
+            inventorySlots[lastInventorySlotIndex + 1].SetBuildingEntity(buildingEntity);
+            lastInventorySlotIndex++;
+            buildingData.Add(buildingEntity);
             UpdateInventoryUI();
         }
 
         public void UpdateInventoryUI()
         {
-
+            for (int i = 0; i < inventorySlots.Count; i++)
+            {
+                if (i < buildingData.Count)
+                {
+                    inventorySlots[i].SetBuildingEntity(buildingData[i]);
+                }
+                else
+                {
+                    inventorySlots[i].Clear();
+                }
+            }
         }
 
         void OnDestroy()
