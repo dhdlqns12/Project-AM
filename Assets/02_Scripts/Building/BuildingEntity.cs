@@ -1,62 +1,71 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using UnityEngine;
 
-namespace Building.Data
+namespace _02_Scripts.Building
 {
-    [Serializable]
     public class BuildingEntity
     {
-        [JsonProperty("Index")]
         public int Index;
-
-        [JsonProperty("Building_Name")]
         public string BuildingName;
-
-        [JsonProperty("Building_Type")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public BuildingType BuildingType;
-
-        [JsonProperty("Building_Level")]
-        public int? BuildingLevel;
-
-        public List<Vector2Int> BuildingCoordinate;
-
-        [JsonProperty("Building_Coordinate")]
-        public string? BuildingCoordinateString;
-
-        [JsonProperty("Unit_Production_Cycle")]
+        public int BuildingLevel;
+        public List<Vector2Int> BuildingCoordinates;
         public float? UnitProductionCycle;
-
-        [JsonProperty("Produced_Unit_Type")]
-        [JsonConverter(typeof(StringEnumConverter))]
         public ProductionUnitType? ProductionUnitType;
-
-        [JsonProperty("Units_Per_Cycle")]
         public int? UnitPerCycle;
-
-        [JsonProperty("Gold_Production_Cycle")]
         public float? GoldProductionCycle;
-
-        [JsonProperty("Gold_Production_Amount")]
         public float? GoldProductionAmount;
-
-        [JsonProperty("Unit_Stat_Multiplier")]
         public float? UnitStatMultiplier;
-
-        [JsonProperty("Merge_Result")]
         public int? MergeResult;
-    }
 
-    public enum BuildingType
-    {
-        Barracks, Tower, Farm
-    }
+        public BuildingEntity(BuildingData buildingData)
+        {
+            Index = buildingData.Index;
+            BuildingName = buildingData.BuildingName;
+            BuildingLevel = buildingData.BuildingLevel;
+            BuildingCoordinates = GetBuildingCoordinates(buildingData.BuildingCoordinateString);
+            UnitProductionCycle = buildingData.UnitProductionCycle;
+            ProductionUnitType = buildingData.ProductionUnitType;
+            UnitPerCycle = buildingData.UnitPerCycle;
+            GoldProductionCycle = buildingData.GoldProductionCycle;
+            GoldProductionAmount = buildingData.GoldProductionAmount;
+            UnitStatMultiplier = buildingData.UnitStatMultiplier;
+            MergeResult = buildingData.MergeResult;
+        }
 
-    public enum ProductionUnitType
-    {
-        Warrior, Archer
+        private List<Vector2Int> GetBuildingCoordinates(string buildingCoordinateString)
+        {
+            var coordinates = new List<Vector2Int>();
+
+            if (string.IsNullOrWhiteSpace(buildingCoordinateString) ||
+                buildingCoordinateString.Equals("null", StringComparison.OrdinalIgnoreCase))
+            {
+                return coordinates;
+            }
+
+            string[] pairs = buildingCoordinateString.Split(')');
+
+            foreach (string pair in pairs)
+            {
+                if (string.IsNullOrWhiteSpace(pair))
+                {
+                    continue;
+                }
+
+                string cleanedPair = pair.Replace("(", "").Replace(",", " ").Trim();
+
+                string[] nums = cleanedPair.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (nums.Length == 2 &&
+                    int.TryParse(nums[0], out int x) &&
+                    int.TryParse(nums[1], out int y))
+                {
+                    coordinates.Add(new Vector2Int(x, y));
+                }
+
+            }
+
+            return coordinates;
+        }
+
     }
 }

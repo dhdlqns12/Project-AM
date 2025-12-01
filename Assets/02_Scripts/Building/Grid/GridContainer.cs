@@ -1,23 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GridContainer : MonoBehaviour
+namespace _02_Scripts.Building.Grid
 {
-    [SerializeField] private GameObject gridSlotContainer;
-    [SerializeField] private GameObject gridSlotPrefab;
-    [SerializeField] private int gridSlotAmount = 25;
-
-    void Awake()
+    public class GridContainer : MonoBehaviour
     {
-        Init();
-    }
+        [SerializeField] private GameObject gridSlotContainer;
+        [SerializeField] private GameObject gridSlotPrefab;
+        [SerializeField] private int gridSlotAmount = 25;
 
-    void Init()
-    {
-        for (int i = 0; i < gridSlotAmount; i++)
+        void Awake()
         {
-            GameObject slot = Instantiate(gridSlotPrefab, gridSlotContainer.transform);
+            Init();
+        }
+
+        void Init()
+        {
+            for (int i = 0; i < gridSlotAmount; i++)
+            {
+                GameObject slot = Instantiate(gridSlotPrefab, gridSlotContainer.transform);
+            }
         }
     }
 }

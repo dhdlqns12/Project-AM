@@ -1,17 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
-using Building.Data;
 using Newtonsoft.Json;
 using UnityEngine;
 using Utils;
 
-public class Test : MonoBehaviour
+namespace _02_Scripts.Building.Test
 {
-    void Start()
+    public class Test : MonoBehaviour
     {
-        var aaaa = Resources.Load<TextAsset>("Data/BuildingData").text;
-        var aaaParse = JsonConvert.DeserializeObject<List<BuildingEntity>>(aaaa);
+        void Start()
+        {
+            var aaaa = Resources.Load<TextAsset>("Data/BuildingData").text;
+            var aaaParse = JsonConvert.DeserializeObject<List<BuildingData>>(aaaa);
 
-        Debug.Log(aaaParse.ToDebugString());
+            for (int i = 0; i < aaaParse.Count; i++)
+            {
+                var a = aaaParse[i];
+                var b = new BuildingEntity(a);
+                Debug.Log(b.ToDebugString());
+
+            }
+        }
     }
 }
