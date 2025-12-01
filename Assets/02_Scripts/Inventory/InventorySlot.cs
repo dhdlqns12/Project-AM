@@ -1,6 +1,7 @@
 using _02_Scripts.Building;
 using TMPro;
 using UnityEngine;
+using Utils;
 
 namespace Inventory
 {
@@ -19,6 +20,12 @@ namespace Inventory
         {
             this.buildingEntity = null;
             buildingNameText.text = "";
+        }
+
+        public void SelectBuilding()
+        {
+            if (buildingEntity == null) return;
+            InventoryEvents.OnBuildingSelectedInvoked(buildingEntity);
         }
 
     }

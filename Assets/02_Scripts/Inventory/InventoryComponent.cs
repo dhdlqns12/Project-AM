@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _02_Scripts.Building;
 using UnityEngine;
@@ -19,6 +20,8 @@ namespace Inventory
         private GachaBuilding gachaBuilding;
 
         private int lastInventorySlotIndex = -1;
+
+
         void Awake()
         {
             Init();
