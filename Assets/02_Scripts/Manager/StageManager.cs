@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StageManager : MonoBehaviour
+public class StageManager : Singleton<StageManager>
 {
     private int gold;
 
@@ -11,10 +9,10 @@ public class StageManager : MonoBehaviour
         get => gold;
         set => gold = value;
     }
-    
-    public void Init()
+
+    protected override void Init()
     {
-        
+        Debug.Log("스테이지 매니저 초기화");
     }
 
     public void PlusGold(int amount)
