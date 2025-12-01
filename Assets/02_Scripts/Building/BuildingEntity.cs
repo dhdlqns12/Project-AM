@@ -11,7 +11,7 @@ namespace _02_Scripts.Building
         public int BuildingLevel;
         public List<Vector2Int> BuildingCoordinates;
         public float? UnitProductionCycle;
-        public ProductionUnitType? ProductionUnitType;
+        public UnitType? ProductionUnitType;
         public int? UnitPerCycle;
         public float? GoldProductionCycle;
         public float? GoldProductionAmount;
