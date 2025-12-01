@@ -16,8 +16,9 @@ public class ClampCamera : MonoBehaviour
 
     private void Reset()
     {
-        mapWidth = 144f;
+        mapWidth = 120;
         dragSpeed = 1f;
+        cam = Camera.main;
     }
 
     private void Awake()
@@ -25,7 +26,6 @@ public class ClampCamera : MonoBehaviour
         if (cam == null)
             cam = Camera.main;
 
-        Init();
         CalculateCameraBounds();
     }
 
@@ -34,20 +34,16 @@ public class ClampCamera : MonoBehaviour
         HandleDragInput();
     }
 
-    private void Init()
-    {
-        mapWidth = 144f;
-        dragSpeed = 1f;
-    }
-
     private void CalculateCameraBounds()
     {
         float cameraHalfWidth = cam.orthographicSize * cam.aspect;
 
         float mapHalfWidth = mapWidth / 2f;
 
-        minCameraX = -mapHalfWidth + cameraHalfWidth;  // -72 + 17.78 = -54.22
-        maxCameraX = mapHalfWidth - cameraHalfWidth;   //  72 - 17.78 =  54.22
+        minCameraX = -mapHalfWidth + cameraHalfWidth;
+        maxCameraX = mapHalfWidth - cameraHalfWidth;
+
+        cam.transform.position = new Vector3(minCameraX, 0, -10);
 
         Debug.Log($"Camera Bounds - Min: {minCameraX}, Max: {maxCameraX}");
     }
