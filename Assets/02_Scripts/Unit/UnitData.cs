@@ -11,7 +11,7 @@ public class UnitData
     public int Level { get; private set; }
 
     public int Attack { get; private set; }
-    public int AttackRange { get; private set; }
+    public float AttackRange { get; private set; }
     public float AttackSpeed { get; private set; }
     public int Defense { get; private set; }
     public int HP { get; private set; }

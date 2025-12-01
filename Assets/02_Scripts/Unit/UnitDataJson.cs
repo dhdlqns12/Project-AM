@@ -13,7 +13,7 @@ public class UnitDataJson
     public int UnitAttack;
 
     [JsonProperty("Unit_Attackrange")]
-    public int UnitAttackRange;
+    public float UnitAttackRange;
 
     [JsonProperty("Unit_Attackspeed")]
     public float UnitAttackSpeed;

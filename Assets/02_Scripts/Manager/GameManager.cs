@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +10,7 @@ public class GameManager :Singleton<GameManager>
     protected override void Init()
     {
         ResourceManager.Init();
+        UnitDataManager.Instance.Init();
     }
 
     private bool isDead;
@@ -19,7 +20,6 @@ public class GameManager :Singleton<GameManager>
         get => isDead;
         set => isDead = value;
     }
-
     private void CreateStageManager()
     {
         GameObject stageManagerObj = new GameObject("StageManager");
