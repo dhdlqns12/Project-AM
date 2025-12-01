@@ -16,7 +16,7 @@ public  static class ResourceManager
    public static void Init()
    {
       Clear();
-      PreLoadData();
+      PreLoadTextAssetData();
       Debug.Log("리소스 매니저 준비 완료");
    }
 
@@ -25,7 +25,7 @@ public  static class ResourceManager
       textAssets.Clear();
    }
 
-   private static void PreLoadData()
+   private static void PreLoadTextAssetData()
    {
       var jsons = Resources.LoadAll<TextAsset>("Data");
       foreach (var kvp in jsons)
