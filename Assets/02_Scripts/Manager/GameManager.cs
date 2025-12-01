@@ -11,6 +11,7 @@ public class GameManager :Singleton<GameManager>
     {
         ResourceManager.Init();
         UnitDataManager.Instance.Init();
+        CreateStageManager();
     }
 
     private bool isDead;
@@ -39,6 +40,7 @@ public class GameManager :Singleton<GameManager>
         }
         
         //플레이어 승리
+        isDead = true;
     }
     
     public void ResetStageData()
