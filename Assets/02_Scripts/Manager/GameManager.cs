@@ -10,7 +10,6 @@ public class GameManager :Singleton<GameManager>
     protected override void Init()
     {
         ResourceManager.Init();
-        CreateStageManager();
     }
 
     private bool isDead;
