@@ -12,7 +12,7 @@ namespace _02_Scripts.Building
         public List<Vector2Int> BuildingCoordinates;
         public Vector2Int CenterCoordinate;
         public float? UnitProductionCycle;
-        public UnitType? ProductionUnitType;
+        public Enums.UnitType? ProductionUnitType;
         public int? UnitPerCycle;
         public float? GoldProductionCycle;
         public float? GoldProductionAmount;

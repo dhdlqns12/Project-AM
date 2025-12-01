@@ -20,11 +20,11 @@ namespace _02_Scripts.Building
 
         public MouseState CurrentMouseState { get; set; }
         private BuildingEntity buildingEntity;
-        private RectTransform previewTransform;
+        // private RectTransform previewTransform;
         private Dictionary<Vector2Int, GameObject> gridSlots = new Dictionary<Vector2Int, GameObject>();
         void Awake()
         {
-            previewTransform = GetComponent<RectTransform>();
+            // previewTransform = GetComponent<RectTransform>();
             Init();
         }
 

@@ -28,7 +28,7 @@ namespace _02_Scripts.Building
 
         [JsonProperty("Produced_Unit_Type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public UnitType? ProductionUnitType;
+        public Enums.UnitType? ProductionUnitType;
 
         [JsonProperty("Units_Per_Cycle")]
         public int? UnitPerCycle;
