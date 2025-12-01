@@ -1,25 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitDataManager : MonoBehaviour
+public class UnitDataManager : Singleton<UnitDataManager>
 {
-    public static UnitDataManager Instance;
-
     private Dictionary<int, UnitData> unitDataDictionary = new Dictionary<int, UnitData>();
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    public void Init()
+    protected override void Init()
     {
         LoadUnitData();
     }

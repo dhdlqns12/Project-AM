@@ -26,8 +26,10 @@ public class UnitSpawner : MonoBehaviour
     /// <param name="team">팀 구분 (Player/Enemy)</param>
     /// <param name="statMultiplier">스탯 배율 (건물 레벨에 따라)</param>
     /// <param name="count">생성 개수</param>
+    /// <param name="mSpawnInterval">스폰 간격 설정</param>
     public void SpawnUnits(Enums.UnitType unitType, Vector3 spawnPosition, Team team, float statMultiplier, int count, float mSpawnInterval)
     {
+        mSpawnInterval = spawnInterval;
         StartCoroutine(SpawnUnitsWithDelay(unitType, spawnPosition, team, statMultiplier, count, mSpawnInterval));
     }
 
@@ -49,7 +51,7 @@ public class UnitSpawner : MonoBehaviour
             // 다음 유닛까지 대기 (마지막 유닛은 대기 안 함)
             if (i < count - 1)
             {
-                yield return new WaitForSeconds(spawnInterval);
+                yield return new WaitForSeconds(mSpawnInterval);
             }
         }
     }
@@ -59,7 +61,7 @@ public class UnitSpawner : MonoBehaviour
     /// </summary>
     private void SpawnUnit(Enums.UnitType unitType, Vector3 position, Team team, float statMultiplier)
     {
-        // 1. 유닛 데이터 찾기 (타입 + 팀으로)
+        // 유닛 데이터 찾기 (타입 + 팀으로)
         UnitData baseData = FindUnitData(unitType, team);
 
         if (baseData == null)
@@ -68,14 +70,14 @@ public class UnitSpawner : MonoBehaviour
             return;
         }
 
-        // 2. 프리팹 선택
+        // 프리팹 선택
         GameObject prefab = team == Team.Player ? playerUnitPrefab : enemyUnitPrefab;
 
-        // 3. 유닛 생성
+        // 유닛 생성
         GameObject unitObj = Instantiate(prefab, position, Quaternion.identity);
         unitObj.layer = team == Team.Player ? LayerMask.NameToLayer("PlayerUnit") : LayerMask.NameToLayer("EnemyUnit");
 
-        // 4. 유닛 초기화 (스탯 배율 적용)
+        // 유닛 초기화 (스탯 배율 적용)
         UnitBase unit = unitObj.GetComponent<UnitBase>();
 
         if (unit != null)
