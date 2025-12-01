@@ -1,10 +1,5 @@
 ﻿using UnityEngine;
-
-public enum UnitType
-{
-    Warrior,
-    Archer
-}
+using static Enums;
 
 public class UnitData
 {
