@@ -2,7 +2,7 @@
     {
         "Index": 1,
         "Unit_Attack": 10,
-        "Unit_Attackrange": 1,
+        "Unit_Attackrange": 2,
         "Unit_Attackspeed": 1.5,
         "Unit_Defense": 5,
         "Unit_HP": 100,
@@ -15,7 +15,7 @@
     {
         "Index": 2,
         "Unit_Attack": 12,
-        "Unit_Attackrange": 1,
+        "Unit_Attackrange": 2,
         "Unit_Attackspeed": 1.5,
         "Unit_Defense": 6,
         "Unit_HP": 120,
@@ -28,7 +28,7 @@
     {
         "Index": 3,
         "Unit_Attack": 15,
-        "Unit_Attackrange": 2,
+        "Unit_Attackrange": 3,
         "Unit_Attackspeed": 1.5,
         "Unit_Defense": 8,
         "Unit_HP": 150,
@@ -41,7 +41,7 @@
     {
         "Index": 4,
         "Unit_Attack": 15,
-        "Unit_Attackrange": 3,
+        "Unit_Attackrange": 4,
         "Unit_Attackspeed": 1,
         "Unit_Defense": 2,
         "Unit_HP": 50,
@@ -54,7 +54,7 @@
     {
         "Index": 5,
         "Unit_Attack": 18,
-        "Unit_Attackrange": 3,
+        "Unit_Attackrange": 4,
         "Unit_Attackspeed": 1,
         "Unit_Defense": 2,
         "Unit_HP": 60,
@@ -67,7 +67,7 @@
     {
         "Index": 6,
         "Unit_Attack": 23,
-        "Unit_Attackrange": 5,
+        "Unit_Attackrange": 6,
         "Unit_Attackspeed": 1,
         "Unit_Defense": 3,
         "Unit_HP": 75,
