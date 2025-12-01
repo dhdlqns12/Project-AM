@@ -1,9 +1,8 @@
-[
+﻿[
     {
-        "Grow_Minute": 0,
         "Index": 11,
         "Unit_Attack": 10,
-        "Unit_Attackrange": 1,
+        "Unit_Attackrange": 2,
         "Unit_Attackspeed": 1.5,
         "Unit_Defense": 5,
         "Unit_HP": 100,
@@ -13,10 +12,9 @@
         "Unit_Type": "EnemyWarrior"
     },
     {
-        "Grow_Minute": 5,
         "Index": 12,
         "Unit_Attack": 12,
-        "Unit_Attackrange": 1,
+        "Unit_Attackrange": 2,
         "Unit_Attackspeed": 1.5,
         "Unit_Defense": 6,
         "Unit_HP": 120,
@@ -26,10 +24,9 @@
         "Unit_Type": "EnemyWarrior"
     },
     {
-        "Grow_Minute": 10,
         "Index": 13,
         "Unit_Attack": 15,
-        "Unit_Attackrange": 2,
+        "Unit_Attackrange": 3,
         "Unit_Attackspeed": 1.5,
         "Unit_Defense": 8,
         "Unit_HP": 150,
@@ -39,10 +36,9 @@
         "Unit_Type": "EnemyWarrior"
     },
     {
-        "Grow_Minute": 0,
         "Index": 14,
         "Unit_Attack": 15,
-        "Unit_Attackrange": 3,
+        "Unit_Attackrange": 4,
         "Unit_Attackspeed": 1,
         "Unit_Defense": 2,
         "Unit_HP": 50,
@@ -52,10 +48,9 @@
         "Unit_Type": "EnemyArcher"
     },
     {
-        "Grow_Minute": 5,
         "Index": 15,
         "Unit_Attack": 18,
-        "Unit_Attackrange": 3,
+        "Unit_Attackrange": 4,
         "Unit_Attackspeed": 1,
         "Unit_Defense": 2,
         "Unit_HP": 60,
@@ -65,10 +60,9 @@
         "Unit_Type": "EnemyArcher"
     },
     {
-        "Grow_Minute": 10,
         "Index": 16,
         "Unit_Attack": 23,
-        "Unit_Attackrange": 5,
+        "Unit_Attackrange": 6,
         "Unit_Attackspeed": 1,
         "Unit_Defense": 3,
         "Unit_HP": 75,
