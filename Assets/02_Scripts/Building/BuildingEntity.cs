@@ -10,8 +10,9 @@ namespace _02_Scripts.Building
         public string BuildingName;
         public int BuildingLevel;
         public List<Vector2Int> BuildingCoordinates;
+        public Vector2Int CenterCoordinate;
         public float? UnitProductionCycle;
-        public ProductionUnitType? ProductionUnitType;
+        public Enums.UnitType? ProductionUnitType;
         public int? UnitPerCycle;
         public float? GoldProductionCycle;
         public float? GoldProductionAmount;
@@ -24,6 +25,7 @@ namespace _02_Scripts.Building
             BuildingName = buildingData.BuildingName;
             BuildingLevel = buildingData.BuildingLevel;
             BuildingCoordinates = GetBuildingCoordinates(buildingData.BuildingCoordinateString);
+            CenterCoordinate = new Vector2Int(0, 0);
             UnitProductionCycle = buildingData.UnitProductionCycle;
             ProductionUnitType = buildingData.ProductionUnitType;
             UnitPerCycle = buildingData.UnitPerCycle;

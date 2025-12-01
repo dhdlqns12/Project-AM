@@ -28,7 +28,7 @@ namespace _02_Scripts.Building
 
         [JsonProperty("Produced_Unit_Type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public ProductionUnitType? ProductionUnitType;
+        public Enums.UnitType? ProductionUnitType;
 
         [JsonProperty("Units_Per_Cycle")]
         public int? UnitPerCycle;
@@ -49,10 +49,5 @@ namespace _02_Scripts.Building
     public enum BuildingType
     {
         Barracks, Tower, Farm
-    }
-
-    public enum ProductionUnitType
-    {
-        Warrior, Archer
     }
 }
