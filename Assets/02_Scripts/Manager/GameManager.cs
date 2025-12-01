@@ -1,9 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager :Singleton<GameManager>
 {
+    protected override void Init()
+    {
+        ResourceManager.Init();
+    }
+
     private bool isDead;
 
     public bool IsDead
@@ -11,12 +17,6 @@ public class GameManager : MonoBehaviour
         get => isDead;
         set => isDead = value;
     }
-
-    public void Init()
-    {
-        
-    }
-
     public void GameStart()
     {
         
