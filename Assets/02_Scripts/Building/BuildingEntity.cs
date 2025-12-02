@@ -38,6 +38,33 @@ namespace _02_Scripts.Building
             BuildingType = buildingData.BuildingType;
         }
 
+        public BuildingEntity(BuildingEntity buildingEntity)
+        {
+            Index = buildingEntity.Index;
+            BuildingName = buildingEntity.BuildingName;
+            BuildingLevel = buildingEntity.BuildingLevel;
+            BuildingCoordinates = buildingEntity.BuildingCoordinates;
+            CenterCoordinate = new Vector2Int(0, 0);
+            UnitProductionCycle = buildingEntity.UnitProductionCycle;
+            ProductionUnitType = buildingEntity.ProductionUnitType;
+            UnitPerCycle = buildingEntity.UnitPerCycle;
+            GoldProductionCycle = buildingEntity.GoldProductionCycle;
+            GoldProductionAmount = buildingEntity.GoldProductionAmount;
+            UnitStatMultiplier = buildingEntity.UnitStatMultiplier;
+            MergeResult = buildingEntity.MergeResult;
+            BuildingType = buildingEntity.BuildingType;
+        }
+
+        public bool CanMerge(BuildingEntity buildingEntity)
+        {
+            if(buildingEntity == null) return false;
+            if(buildingEntity.BuildingType != this.BuildingType) return false;
+            if(buildingEntity.BuildingLevel != this.BuildingLevel) return false;
+            Debug.Log($"인벤토리 인덱스 : Preview - {InventoryIndex} target : {buildingEntity.InventoryIndex}");
+            if(buildingEntity.InventoryIndex == this.InventoryIndex) return false;
+            return true;
+        }
+
         private List<Vector2Int> GetBuildingCoordinates(string buildingCoordinateString)
         {
             var coordinates = new List<Vector2Int>();

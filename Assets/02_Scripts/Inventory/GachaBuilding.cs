@@ -39,7 +39,7 @@ namespace Inventory
         public void OnClickGachaBuilding()
         {
             int random = UnityEngine.Random.Range(0, gachaPool.Count);
-            OnGetBuilding?.Invoke(gachaPool[random]);
+            OnGetBuilding?.Invoke(new BuildingEntity(gachaPool[random]));
         }
 
 

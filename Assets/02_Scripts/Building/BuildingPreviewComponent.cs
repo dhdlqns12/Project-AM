@@ -35,6 +35,7 @@ namespace _02_Scripts.Building
         private Dictionary<Vector2Int, GameObject> occupied = new Dictionary<Vector2Int, GameObject>();
         private bool canBuild;
         private List<Vector2Int> targetGrid = new List<Vector2Int>();
+        private bool canMerge;
 
 
         public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
@@ -97,6 +98,31 @@ namespace _02_Scripts.Building
         private void CheckMerge()
         {
             if (buildingEntity == null) return;
+            PointerEventData pointerData = new PointerEventData(eventSystem);
+            pointerData.position = Input.mousePosition;
+            List<RaycastResult> results = new List<RaycastResult>();
+            InventorytargetGridRaycaster.Raycast(pointerData, results);
+            if (results.Count > 0)
+            {
+                foreach (var result in results)
+                {
+                    InventorySlot slot = result.gameObject.GetComponent<InventorySlot>();
+                    if(slot == null) continue;
+                    BuildingEntity targetBuilding = slot.BuildingEntity;
+                    if (buildingEntity.CanMerge(targetBuilding))
+                    {
+                        canMerge = true;
+                    }
+                    else
+                    {
+                        canMerge = false;
+                    }
+                }
+            }
+            else
+            {
+                canMerge = false;
+            }
         }
 
         private void CheckCanBuild()
