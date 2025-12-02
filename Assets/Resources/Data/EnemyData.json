@@ -7,7 +7,7 @@
         "Unit_Defense": 5,
         "Unit_HP": 100,
         "Unit_Level": 1,
-        "Unit_Movespeed": 1.0,
+        "Unit_Movespeed": 1.2,
         "Unit_Name": "적 전사",
         "Unit_Type": "Warrior"
     },
@@ -19,19 +19,19 @@
         "Unit_Defense": 6,
         "Unit_HP": 120,
         "Unit_Level": 2,
-        "Unit_Movespeed": 1.0,
+        "Unit_Movespeed": 1.2,
         "Unit_Name": "적 전사",
         "Unit_Type": "Warrior"
     },
     {
         "Index": 13,
         "Unit_Attack": 15,
-        "Unit_Attackrange": 2.5,
+        "Unit_Attackrange": 1.5,
         "Unit_Attackspeed": 1.5,
         "Unit_Defense": 8,
         "Unit_HP": 150,
         "Unit_Level": 3,
-        "Unit_Movespeed": 1.0,
+        "Unit_Movespeed": 1.2,
         "Unit_Name": "적 전사",
         "Unit_Type": "Warrior"
     },
@@ -43,7 +43,7 @@
         "Unit_Defense": 2,
         "Unit_HP": 50,
         "Unit_Level": 1,
-        "Unit_Movespeed": 1.2,
+        "Unit_Movespeed": 1,
         "Unit_Name": "적 궁수",
         "Unit_Type": "Archer"
     },
@@ -55,19 +55,19 @@
         "Unit_Defense": 2,
         "Unit_HP": 60,
         "Unit_Level": 2,
-        "Unit_Movespeed": 1.2,
+        "Unit_Movespeed": 1,
         "Unit_Name": "적 궁수",
         "Unit_Type": "Archer"
     },
     {
         "Index": 16,
         "Unit_Attack": 23,
-        "Unit_Attackrange": 5.5,
+        "Unit_Attackrange": 4,
         "Unit_Attackspeed": 1,
         "Unit_Defense": 3,
         "Unit_HP": 75,
         "Unit_Level": 3,
-        "Unit_Movespeed": 1.2,
+        "Unit_Movespeed": 1,
         "Unit_Name": "적 궁수",
         "Unit_Type": "Archer"
     }

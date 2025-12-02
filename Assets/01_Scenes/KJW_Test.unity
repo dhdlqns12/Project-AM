@@ -254,6 +254,9 @@ MonoBehaviour:
   unitSpawner: {fileID: 1473068715}
   enemySpawnPoint: {fileID: 518569510}
   autoStart: 1
+  frontLineOffset: -1.5
+  backLineOffset: 0.5
+  unitSpacing: 0.8
 --- !u!1 &537960875
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,7 +651,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47415763362c74050b2eeff9242a8f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageManager: {fileID: 0}
 --- !u!4 &1838941365
 Transform:
   m_ObjectHideFlags: 0

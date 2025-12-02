@@ -3,10 +3,13 @@
 public class UnitMovement : MonoBehaviour
 {
     private UnitBase unit;
+    private Rigidbody2D rb;
     private bool isMoving = true;
     private float moveDirection;  // 1: 오른쪽, -1: 왼쪽
 
-    private Rigidbody2D rb;
+    private Vector3? targetPosition = null;  // 추적할 타겟 위치
+
+    public bool IsMoving => isMoving;
 
     private void Awake()
     {
@@ -37,7 +40,41 @@ public class UnitMovement : MonoBehaviour
             return;
         }
 
-        rb.velocity = Vector2.right * moveDirection * unit.Data.MoveSpeed;
+        if (targetPosition.HasValue)
+        {
+            Vector3 direction = (targetPosition.Value - transform.position).normalized;
+            rb.velocity = new Vector2(direction.x, direction.y) * unit.Data.MoveSpeed;
+        }
+        else
+        {
+            rb.velocity = Vector2.right * moveDirection * unit.Data.MoveSpeed;
+        }
+    }
+
+    /// <summary>
+    /// 특정 위치로 이동 (타겟 추적)
+    /// </summary>
+    public void MoveTowards(Vector3 position)
+    {
+        targetPosition = position;
+
+        if (!isMoving)
+        {
+            Resume();
+        }
+    }
+
+    /// <summary>
+    /// 기본 방향으로 이동 (타겟 없음)
+    /// </summary>
+    public void MoveDefault()
+    {
+        targetPosition = null;
+
+        if (!isMoving)
+        {
+            Resume();
+        }
     }
 
     /// <summary>
