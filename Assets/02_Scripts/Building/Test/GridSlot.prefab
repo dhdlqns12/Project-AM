@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 8601318862022082935}
   - component: {fileID: 4690439912198783370}
   - component: {fileID: 4691165093281846945}
+  - component: {fileID: 5222417548299104941}
   m_Layer: 5
-  m_Name: Background
+  m_Name: GridBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5222417548299104941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3752610942408699896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72a3125e64e483f9d9fe67f57d4f493, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4036517941478960331
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,8 +97,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4231942598680815754}
-  - component: {fileID: 1923064255722916371}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: GridSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,15 +124,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1923064255722916371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4036517941478960331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b72a3125e64e483f9d9fe67f57d4f493, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

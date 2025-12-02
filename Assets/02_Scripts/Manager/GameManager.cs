@@ -5,16 +5,14 @@ using UnityEngine;
 
 public class GameManager :Singleton<GameManager>
 {
-    [SerializeField] private StageManager stageManager;
-    
     protected override void Init()
     {
         ResourceManager.Init();
         CreateStageManager();
-        CreateUnitDataManager();
-        CreateEnemySpawnerManager();
+        CreateAudioManager();
     }
 
+    //상대, 우리편 불값 분리 조정
     private bool isDead;
 
     public bool IsDead
@@ -22,23 +20,18 @@ public class GameManager :Singleton<GameManager>
         get => isDead;
         set => isDead = value;
     }
-
+    
     private void CreateStageManager()
     {
         GameObject stageManagerObj = new GameObject("StageManager");
-        stageManager = stageManagerObj.AddComponent<StageManager>();
+        stageManagerObj.AddComponent<StageManager>();
     }
 
-    private void CreateUnitDataManager()
+    private void CreateAudioManager()
     {
-        GameObject unitDataManagerObj = new GameObject("UnitDataManager");
-        unitDataManagerObj.AddComponent<UnitDataManager>();
-    }
-
-    private void CreateEnemySpawnerManager()
-    {
-        GameObject EnemySpawnManagerObj = new GameObject("EnemySpawnerDataManager");
-        EnemySpawnManagerObj.AddComponent<EnemySpawnerDataManager>();
+        GameObject audioManagerObj = new GameObject("AudioManager");
+        audioManagerObj.AddComponent<AudioManager>();
+        
     }
     
     public void GameStart()
@@ -48,6 +41,8 @@ public class GameManager :Singleton<GameManager>
 
     public void GameOver()
     {
+        //게임씬 오브젝트로부터 정보를 전달받아 isDead전환
+        
         if (isDead)
         {
             //플레이어 패배
@@ -60,7 +55,7 @@ public class GameManager :Singleton<GameManager>
     public void ResetStageData()
     {
         isDead = false;
-        StageManager.Instance.ClearGold();
+        StageManager.Instance.ResetGold();
         /*
          * 플레이어 유닛,건물 초기화
          * 상대 유닛, 건물 초기화
