@@ -10,6 +10,11 @@ public class EnemySpawner : MonoBehaviour
     [Header("설정")]
     [SerializeField] private bool autoStart = true;
 
+    [Header("대형 배치")]
+    [SerializeField] private float frontLineOffset = -1.5f;  // 앞줄 오프셋
+    [SerializeField] private float backLineOffset = -0.5f;  // 뒷줄 오프셋
+    [SerializeField] private float unitSpacing = 0.8f;      // 유닛 간 간격 (Y축)
+
     private EnemySpawnerData currentSpawnerData;
     private float gameElapsedTime = 0f;
     private Coroutine spawnCoroutine;
@@ -30,7 +35,6 @@ public class EnemySpawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             gameElapsedTime += 300f;
-            Debug.Log($"시간 스킵 현재: {GetGameTimeString()}");
         }
 
         UpdateSpawnerData();
@@ -59,6 +63,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+
     private void UpdateSpawnerData()
     {
         EnemySpawnerData newData = EnemySpawnerDataManager.Instance.GetSpawnerDataByTime(gameElapsedTime);
@@ -68,7 +73,6 @@ public class EnemySpawner : MonoBehaviour
             currentSpawnerData = newData;
 
             float minutes = gameElapsedTime / 60f;
-            Debug.Log($"스포너 데이터 변경 (시간: {minutes:F1}분, 레벨: {currentSpawnerData.UnitLevel})");
 
             if (spawnCoroutine != null)
             {
@@ -77,14 +81,14 @@ public class EnemySpawner : MonoBehaviour
             }
         }
     }
-
     private IEnumerator SpawnRoutine()
     {
         while (true)
         {
             if (currentSpawnerData != null)
             {
-                SpawnEnemyWave();
+                SpawnWaveFormation();
+
                 yield return new WaitForSeconds(currentSpawnerData.SpawnInterval);
             }
             else
@@ -94,43 +98,73 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private void SpawnEnemyWave()
+    /// <summary>
+    /// 새로운 방식: 전사 먼저 전부 생성 -> 궁수 생성 (긴 간격)
+    /// </summary>
+    /// <summary>
+    /// 새로운 방식: 전사 앞줄, 궁수 뒷줄 대형 배치
+    /// </summary>
+    /// <summary>
+    /// 새로운 방식: 전사 앞줄, 궁수 뒷줄 대형 배치
+    /// </summary>
+    private void SpawnWaveFormation()
     {
         if (currentSpawnerData == null || unitSpawner == null) return;
 
-        Vector3 spawnPos = enemySpawnPoint != null ? enemySpawnPoint.position : Vector3.zero;
+        Vector3 basePos = enemySpawnPoint != null ? enemySpawnPoint.position : Vector3.zero;
 
-        // 전사 스폰
         if (currentSpawnerData.WarriorCount > 0)
         {
-            unitSpawner.SpawnUnits(Enums.UnitType.Warrior, spawnPos, Team.Enemy, currentSpawnerData.UnitLevel, currentSpawnerData.WarriorCount, 0.3f);
+            SpawnLineFormation(
+                Enums.UnitType.Warrior,
+                basePos,
+                frontLineOffset,  // X 오프셋 (적 방향)
+                currentSpawnerData.WarriorCount,
+                currentSpawnerData.UnitLevel
+            );
         }
 
-        // 궁수 스폰
         if (currentSpawnerData.ArcherCount > 0)
         {
-            unitSpawner.SpawnUnits(Enums.UnitType.Archer, spawnPos, Team.Enemy, currentSpawnerData.UnitLevel, currentSpawnerData.ArcherCount, 0.3f);
+            SpawnLineFormation(
+                Enums.UnitType.Archer,
+                basePos,
+                backLineOffset,  // X 오프셋 (뒤쪽)
+                currentSpawnerData.ArcherCount,
+                currentSpawnerData.UnitLevel
+            );
         }
-
-        Debug.Log($"적 웨이브! (Lv.{currentSpawnerData.UnitLevel}, 전사: {currentSpawnerData.WarriorCount}, 궁수: {currentSpawnerData.ArcherCount})");
     }
 
-    private int GetEnemyUnitIndex(Enums.UnitType unitType, int level)
+    /// <summary>
+    /// 일렬로 유닛 배치
+    /// </summary>
+    private void SpawnLineFormation(Enums.UnitType unitType, Vector3 basePos, float xOffset, int count, int level)
     {
-        int baseIndex = 11;
+        // Y축 중앙 정렬을 위한 시작 위치 계산
+        float totalWidth = (count - 1) * unitSpacing;
+        float startY = -totalWidth / 2f;
 
-        if (unitType == Enums.UnitType.Archer)
+        for (int i = 0; i < count; i++)
         {
-            baseIndex = 14;
+            // 배치 위치 계산
+            Vector3 spawnPos = new Vector3(
+                basePos.x + xOffset,           // X: 앞줄/뒷줄
+                basePos.y + startY + (i * unitSpacing),  // Y: 일렬 배치
+                basePos.z
+            );
+
+            // 유닛 생성 (즉시, 한 마리씩)
+            unitSpawner.SpawnUnits(
+                unitType,
+                spawnPos,
+                Team.Enemy,
+                level,
+                1,   // 한 마리
+                0f   // 즉시 생성
+            );
         }
 
-        return baseIndex + (level - 1);
-    }
-
-    public string GetGameTimeString()
-    {
-        int minutes = Mathf.FloorToInt(gameElapsedTime / 60f);
-        int seconds = Mathf.FloorToInt(gameElapsedTime % 60f);
-        return $"{minutes:00}:{seconds:00}";
+        string typeName = unitType == Enums.UnitType.Warrior ? "전사" : "궁수";
     }
 }

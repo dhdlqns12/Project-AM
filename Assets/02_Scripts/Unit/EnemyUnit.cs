@@ -14,7 +14,7 @@ public class EnemyUnit : UnitBase
     protected override void OnInitialized()
     {
         movement?.Init(this);
-        combat?.Init(this);
+        combat?.Init(this,movement);
 
         Debug.Log($"{Data.Name} 생성 (Lv.{Data.Level})");
     }
@@ -29,7 +29,7 @@ public class EnemyUnit : UnitBase
         Debug.Log($"{Data.Name} 사망!");
 
         movement?.Stop();
-        combat?.Stop();
+        
 
         // TODO: 골드/아이템 드롭
     }
