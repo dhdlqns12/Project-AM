@@ -19,7 +19,7 @@ public class EnemySpawnerDataManager : Singleton<EnemySpawnerDataManager>
 
         if (jsonArray == null || jsonArray.Length == 0)
         {
-            Debug.LogError("EnemySpawnerData 로드 실패!");
+            Debug.LogError("EnemySpawnerData 로드 실패");
             return;
         }
 
