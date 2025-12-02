@@ -43,7 +43,7 @@ namespace Inventory
                 gachaBuilding = gachaButtonComponent.GetComponent<GachaBuilding>();
                 gachaBuilding.OnGetBuilding += AddBuilding;
             }
-            BuildingEvents.OnBuildingConstructed += RemoveBuilding;
+            // BuildingEvents.OnBuildingConstructed += RemoveBuilding;
             InventoryEvents.OnBuildingMerged += MergeBuilding;
         }
 
@@ -67,14 +67,14 @@ namespace Inventory
             AddBuilding(newBuilding);
         }
 
-        private void RemoveBuilding(BuildingEntity buildingToRemove)
-        {
-            bool removed = buildingData.Remove(buildingToRemove);
-            if (removed)
-            {
-                UpdateInventoryUI();
-            }
-        }
+        // private void RemoveBuilding(BuildingEntity buildingToRemove)
+        // {
+        //     bool removed = buildingData.Remove(buildingToRemove);
+        //     if (removed)
+        //     {
+        //         UpdateInventoryUI();
+        //     }
+        // }
 
         public void UpdateInventoryUI()
         {
@@ -102,7 +102,7 @@ namespace Inventory
             {
                 gachaBuilding.OnGetBuilding -= AddBuilding;
             }
-            BuildingEvents.OnBuildingConstructed -= RemoveBuilding;
+            // BuildingEvents.OnBuildingConstructed -= RemoveBuilding;
             InventoryEvents.OnBuildingMerged -= MergeBuilding;
         }
     }

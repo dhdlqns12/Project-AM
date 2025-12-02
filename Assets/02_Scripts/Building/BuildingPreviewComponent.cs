@@ -39,6 +39,7 @@ namespace _02_Scripts.Building
 
         private List<BuildingEntity> buildingPools = new List<BuildingEntity>();
         private int[] mergeTargetInventoryIndexs = new int[2];
+        private bool isRotating;
 
         public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
 
@@ -94,10 +95,13 @@ namespace _02_Scripts.Building
                     InventoryEvents.OnBuildingMergedInvoked(mergeTargetInventoryIndexs[0],mergeTargetInventoryIndexs[1], GetBuildingByIndex(buildingEntity.MergeResult));
                     SelectCancel();
                 }
-
             }
 
-
+            if (Input.GetKey(KeyCode.Space))
+            {
+                if (buildingEntity == null) return;
+                RotatePreview();
+            }
         }
 
         public BuildingEntity GetBuildingByIndex(int? index)
@@ -110,6 +114,14 @@ namespace _02_Scripts.Building
                 }
             }
             return null;
+        }
+
+        private void RotatePreview()
+        {
+            if (isRotating) return;
+            isRotating = true;
+            buildingEntity.Rotate();
+            isRotating = false;
         }
 
         private void SetPreviewTransform()

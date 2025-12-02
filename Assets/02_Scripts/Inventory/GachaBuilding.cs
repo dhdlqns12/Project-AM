@@ -12,7 +12,7 @@ namespace Inventory
 
         public event Action<BuildingEntity> OnGetBuilding;
         private List<BuildingEntity> gachaPool;
-        private const int BUILDING_LEVEL_CAN_GET_GACHA = 1;
+        private const int BUILDING_LEVEL_CAN_GET_GACHA = 2;
         private const int GACHA_COST = 100;
 
 

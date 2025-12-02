@@ -71,7 +71,7 @@ namespace _02_Scripts.Building.Grid
                     buildings.Add(buildingEntity);
                 }
             }
-            BuildingEvents.OnBuildingConstructedInvoked(buildingEntity);
+            BuildingEvents.OnBuildingConstructedInvoked(buildings);
         }
 
 

@@ -67,6 +67,24 @@ namespace _02_Scripts.Building
             if(buildingEntity.InventoryIndex == this.InventoryIndex) return false;
             return true;
         }
+        public void Rotate()
+        {
+            var rotatedCoordinates = new List<Vector2Int>();
+            Debug.Log($"회전!");
+            Debug.Log($"중심좌표 : {CenterCoordinate}");
+            Debug.Log($"현재좌표 : ${BuildingCoordinates.ToDebugString()}");
+            foreach (var coord in BuildingCoordinates)
+            {
+                Vector2Int relativePoint = coord - CenterCoordinate;
+                int newX = relativePoint.y;
+                int newY = -relativePoint.x;
+                Vector2Int rotatedRelativePoint = new Vector2Int(newX, newY);
+                Vector2Int newWorldCoord = rotatedRelativePoint + CenterCoordinate;
+                rotatedCoordinates.Add(newWorldCoord);
+            }
+            BuildingCoordinates = rotatedCoordinates;
+            Debug.Log($"변환좌표 : ${BuildingCoordinates.ToDebugString()}");
+        }
 
         private List<Vector2Int> GetBuildingCoordinates(string buildingCoordinateString)
         {
