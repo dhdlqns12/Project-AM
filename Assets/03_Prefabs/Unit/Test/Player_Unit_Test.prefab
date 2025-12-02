@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -8281340131573247937}
   - component: {fileID: -3078323499974090520}
   - component: {fileID: 5615556237631195104}
+  - component: {fileID: 8981622498787426736}
   m_Layer: 0
   m_Name: Player_Unit_Test
   m_TagString: Untagged
@@ -125,6 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da59c8c5021a854dad8e504411f6466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detectionRange: 10
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -136,14 +138,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2818207951990114346}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 0
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -151,10 +153,10 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &5615556237631195104
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -190,3 +192,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &8981622498787426736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2818207951990114346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0f8811ba8b38af41b1fee04b8751522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minX: -59.5
+  maxX: 59.5
+  minY: -9.5
+  maxY: 9.5

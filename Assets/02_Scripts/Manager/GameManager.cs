@@ -10,6 +10,8 @@ public class GameManager :Singleton<GameManager>
         ResourceManager.Init();
         CreateStageManager();
         CreateAudioManager();
+        CreateUnitDataManager();
+        CreateEnemySpawnerManager();
     }
 
     //상대, 우리편 불값 분리 조정
@@ -33,7 +35,19 @@ public class GameManager :Singleton<GameManager>
         audioManagerObj.AddComponent<AudioManager>();
         
     }
-    
+
+    private void CreateUnitDataManager()
+    {
+        GameObject unitDataManagerObj = new GameObject("UnitDataManager");
+        unitDataManagerObj.AddComponent<UnitDataManager>();
+    }
+
+    private void CreateEnemySpawnerManager()
+    {
+        GameObject EnemySpawnManagerObj = new GameObject("EnemySpawnerDataManager");
+        EnemySpawnManagerObj.AddComponent<EnemySpawnerDataManager>();
+    }
+
     public void GameStart()
     {
         

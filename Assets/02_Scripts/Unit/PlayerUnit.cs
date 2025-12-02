@@ -14,7 +14,7 @@ public class PlayerUnit : UnitBase
     protected override void OnInitialized()
     {
         movement?.Init(this);
-        combat?.Init(this);
+        combat?.Init(this,movement);
 
         Debug.Log($"{Data.Name} 생성 (직업: {Data.JobName}, Lv.{Data.Level})");
     }
@@ -29,6 +29,5 @@ public class PlayerUnit : UnitBase
         Debug.Log($"{Data.Name} 사망!");
 
         movement?.Stop();
-        combat?.Stop();
     }
 }

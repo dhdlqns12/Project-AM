@@ -10,10 +10,11 @@ public class UnitSpawner : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private GameObject playerUnitPrefab;
     [SerializeField] private GameObject enemyUnitPrefab;
+    [SerializeField] private GameObject unitPool;
 
     [Header("스폰 설정")]
-    [SerializeField] private Transform playerSpawnPoint;  // 플레이어 넥서스 중앙
-    [SerializeField] private Transform enemySpawnPoint;   // 적 넥서스 중앙
+    [SerializeField] private Transform playerSpawnPoint;  // 플레이어 넥서스 중앙(테스트 용 나중에 삭제)
+    [SerializeField] private Transform enemySpawnPoint; // 테스트용 나중에 삭제
 
     [Header("스폰 간격 설정")]
     [SerializeField] private float spawnInterval;
@@ -26,30 +27,27 @@ public class UnitSpawner : MonoBehaviour
     /// <param name="team">팀 구분 (Player/Enemy)</param>
     /// <param name="statMultiplier">스탯 배율 (건물 레벨에 따라)</param>
     /// <param name="count">생성 개수</param>
-    public void SpawnUnits(Enums.UnitType unitType, Vector3 spawnPosition, Team team, float statMultiplier, int count, float mSpawnInterval)
+    /// <param name="mSpawnInterval">스폰 간격 설정</param>
+    public void SpawnUnits(Enums.UnitType unitType, Vector3 spawnPosition, Team team, int level, int count, float mSpawnInterval = 0f)
     {
-        StartCoroutine(SpawnUnitsWithDelay(unitType, spawnPosition, team, statMultiplier, count, mSpawnInterval));
+        StartCoroutine(SpawnUnitsWithDelay(unitType, spawnPosition, team, level, count, mSpawnInterval));
     }
-
 
     /// <summary>
     /// 시간차를 두고 유닛 생성
     /// </summary>
-    private IEnumerator SpawnUnitsWithDelay(Enums.UnitType unitType, Vector3 spawnPosition, Team team, float statMultiplier, int count, float mSpawnInterval)
+    private IEnumerator SpawnUnitsWithDelay(Enums.UnitType unitType, Vector3 spawnPosition, Team team, int level, int count, float interval)
     {
         for (int i = 0; i < count; i++)
         {
-            // 랜덤 오프셋 (겹치지 않게)
             Vector3 offset = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.3f, 0.3f), 0);
             Vector3 finalPosition = spawnPosition + offset;
 
-            // 유닛 생성
-            SpawnUnit(unitType, finalPosition, team, statMultiplier);
+            SpawnUnit(unitType, finalPosition, team, level);
 
-            // 다음 유닛까지 대기 (마지막 유닛은 대기 안 함)
             if (i < count - 1)
             {
-                yield return new WaitForSeconds(spawnInterval);
+                yield return new WaitForSeconds(interval);
             }
         }
     }
@@ -57,34 +55,26 @@ public class UnitSpawner : MonoBehaviour
     /// <summary>
     /// 단일 유닛 생성
     /// </summary>
-    private void SpawnUnit(Enums.UnitType unitType, Vector3 position, Team team, float statMultiplier)
+    private void SpawnUnit(Enums.UnitType unitType, Vector3 position, Team team, int level)
     {
-        // 1. 유닛 데이터 찾기 (타입 + 팀으로)
-        UnitData baseData = FindUnitData(unitType, team);
+        UnitData unitData = FindUnitData(unitType, team, level);
 
-        if (baseData == null)
+        if (unitData == null)
         {
-            Debug.LogError($"유닛 데이터 없음: {unitType}, {team}");
+            Debug.LogError($"유닛 데이터 없음: {unitType}, {team}, Lv.{level}");
             return;
         }
 
-        // 2. 프리팹 선택
+        Debug.Log($"유닛 데이터 찾음: {unitData.Name}, Lv.{unitData.Level}, HP:{unitData.HP}, ATK:{unitData.Attack}");
+
         GameObject prefab = team == Team.Player ? playerUnitPrefab : enemyUnitPrefab;
 
-        // 3. 유닛 생성
-        GameObject unitObj = Instantiate(prefab, position, Quaternion.identity);
+        GameObject unitObj = Instantiate(prefab, position, Quaternion.identity, unitPool.transform);
         unitObj.layer = team == Team.Player ? LayerMask.NameToLayer("PlayerUnit") : LayerMask.NameToLayer("EnemyUnit");
 
-        // 4. 유닛 초기화 (스탯 배율 적용)
-        UnitBase unit = unitObj.GetComponent<UnitBase>();
-
-        if (unit != null)
+        if (unitObj.TryGetComponent<UnitBase>(out UnitBase unit))
         {
-            // 스탯 배율 적용된 데이터 생성
-            UnitData scaledData = ApplyStatMultiplier(baseData, statMultiplier);
-            unit.Init(scaledData);
-
-            Debug.Log($"유닛 생성: {scaledData.Name} (배율: {statMultiplier}x)");
+            unit.Init(unitData);
         }
         else
         {
@@ -94,48 +84,22 @@ public class UnitSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// 타입과 팀으로 유닛 데이터 찾기
+    /// 타입, 팀, 레벨로 유닛 데이터 찾기
     /// </summary>
-    private UnitData FindUnitData(Enums.UnitType unitType, Team team)
+    private UnitData FindUnitData(Enums.UnitType unitType, Team team, int level)
     {
-        // 플레이어: Index 1~6
-        // 적: Index 11~16
         int baseIndex = team == Team.Player ? 1 : 11;
 
-        // Warrior: 1, 11
-        // Archer: 4, 14
         if (unitType == Enums.UnitType.Archer)
         {
             baseIndex += 3;
         }
 
-        return UnitDataManager.Instance.GetUnitData(baseIndex);
-    }
+        int finalIndex = baseIndex + (level - 1);
 
-    /// <summary>
-    /// 스탯 배율 적용 (건물 레벨에 따라)
-    /// </summary>
-    private UnitData ApplyStatMultiplier(UnitData baseData, float multiplier)
-    {
-        // 원본 데이터 복사 후 스탯만 배율 적용
-        var multipliedStat = new UnitDataJson
-        {
-            Index = baseData.Index,
-            UnitName = baseData.Name,
-            UnitJobName = baseData.JobName,
-            UnitType = baseData.Type,
-            UnitLevel = baseData.Level,
+        Debug.Log($"FindUnitData: {unitType}, {team}, Lv.{level} → Index {finalIndex}");
 
-            //스탯에 배율 적용
-            UnitAttack = Mathf.RoundToInt(baseData.Attack * multiplier),
-            UnitAttackRange = baseData.AttackRange,  // 사거리는 고정
-            UnitAttackSpeed = baseData.AttackSpeed,  // 공속도 고정
-            UnitDefense = Mathf.RoundToInt(baseData.Defense * multiplier),
-            UnitHP = Mathf.RoundToInt(baseData.HP * multiplier),
-            UnitMoveSpeed = baseData.MoveSpeed  // 이속도 고정
-        };
-
-        return new UnitData(multipliedStat);
+        return UnitDataManager.Instance.GetUnitData(finalIndex);
     }
 
     /// <summary>
@@ -143,8 +107,14 @@ public class UnitSpawner : MonoBehaviour
     /// </summary>
     public void SpawnFromNexus(Enums.UnitType unitType, Team team, float statMultiplier, int count)
     {
-        Vector3 spawnPos = team == Team.Player ? playerSpawnPoint.position : enemySpawnPoint.position;
-        SpawnUnits(unitType, spawnPos, team, statMultiplier, count, 0.2f);
+        if (playerSpawnPoint == null)
+        {
+            Debug.LogError("playerSpawnPoint가 설정되지 않았습니다!");
+            return;
+        }
+
+        Vector3 spawnPos = playerSpawnPoint.position;
+        SpawnUnits(unitType, spawnPos, team, 1, count);  // Lv1으로 고정
     }
 }
 

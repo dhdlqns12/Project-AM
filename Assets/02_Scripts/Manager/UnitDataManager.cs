@@ -1,30 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitDataManager : MonoBehaviour
+public class UnitDataManager : Singleton<UnitDataManager>
 {
-    public static UnitDataManager Instance;
-
     private Dictionary<int, UnitData> unitDataDictionary = new Dictionary<int, UnitData>();
 
-    private void Awake()
+    protected override void Init()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        LoadPlayerUnitData();
+        LoadEnemyUnitData();
     }
 
-    public void Init()
-    {
-        LoadUnitData();
-    }
-
-    private void LoadUnitData()
+    private void LoadPlayerUnitData()
     {
         unitDataDictionary.Clear();
 
@@ -42,8 +29,28 @@ public class UnitDataManager : MonoBehaviour
             unitDataDictionary.Add(data.Index, data);
         }
 
-        Debug.Log($"유닛 데이터: {unitDataDictionary.Count}개");
+        Debug.Log($"플레이어 유닛: {unitDataDictionary.Count}개");
     }
+
+    private void LoadEnemyUnitData()
+    {
+        UnitDataJson[] jsonArray = ResourceManager.LoadJsonDataList<UnitDataJson>("EnemyData");
+
+        if (jsonArray == null || jsonArray.Length == 0)
+        {
+            Debug.LogError("EnemyUnitData 로드 실패!");
+            return;
+        }
+
+        foreach (var json in jsonArray)
+        {
+            UnitData data = new UnitData(json);
+            unitDataDictionary.Add(data.Index, data);
+        }
+
+        Debug.Log($"적 유닛: {jsonArray.Length}개");
+    }
+
 
     /// <summary>
     /// Index로 유닛 데이터 가져오기
