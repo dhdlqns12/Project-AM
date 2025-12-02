@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 namespace _02_Scripts.Building
 {
@@ -20,6 +21,8 @@ namespace _02_Scripts.Building
         public int? MergeResult;
         public int InventoryIndex;
         public BuildingType BuildingType;
+
+        private const int MAX_BUILDING_LEVEL = 3;
 
         public BuildingEntity(BuildingData buildingData)
         {
@@ -57,10 +60,12 @@ namespace _02_Scripts.Building
 
         public bool CanMerge(BuildingEntity buildingEntity)
         {
+            Debug.Log(buildingEntity.ToDebugString());
+            Debug.Log(this.ToDebugString());
+            if (BuildingLevel == MAX_BUILDING_LEVEL) return false;
             if(buildingEntity == null) return false;
             if(buildingEntity.BuildingType != this.BuildingType) return false;
             if(buildingEntity.BuildingLevel != this.BuildingLevel) return false;
-            Debug.Log($"인벤토리 인덱스 : Preview - {InventoryIndex} target : {buildingEntity.InventoryIndex}");
             if(buildingEntity.InventoryIndex == this.InventoryIndex) return false;
             return true;
         }

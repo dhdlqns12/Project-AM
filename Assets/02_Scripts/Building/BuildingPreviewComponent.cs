@@ -37,6 +37,8 @@ namespace _02_Scripts.Building
         private List<Vector2Int> targetGrid = new List<Vector2Int>();
         private bool canMerge;
 
+        private List<BuildingEntity> buildingPools = new List<BuildingEntity>();
+        private int[] mergeTargetInventoryIndexs = new int[2];
 
         public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
 
@@ -62,6 +64,13 @@ namespace _02_Scripts.Building
 
             SelectCancel();
             InventoryEvents.OnBuildingSelected += SetPreview;
+
+            var aaaa = Resources.Load<TextAsset>("Data/BuildingData").text;
+            var aaaParse = JsonConvert.DeserializeObject<List<BuildingData>>(aaaa);
+            for (int i = 0; i < aaaParse.Count; i++)
+            {
+                buildingPools.Add(new BuildingEntity(aaaParse[i]));
+            }
         }
 
         void Update()
@@ -73,12 +82,35 @@ namespace _02_Scripts.Building
             }
             if (Input.GetMouseButtonDown(0))
             {
-                if (!canBuild) return;
-                OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
-                SelectCancel();
+                if (canBuild && !canMerge)
+                {
+                    OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
+                    SelectCancel();
+                }else
+                if (canMerge && !canBuild)
+                {
+                    if (buildingEntity == null) return;
+                    if(mergeTargetInventoryIndexs[0] == -1 || mergeTargetInventoryIndexs[1] == -1 ) return;
+                    if (buildingEntity.MergeResult == null) return;
+                    InventoryEvents.OnBuildingMergedInvoked(mergeTargetInventoryIndexs[0],mergeTargetInventoryIndexs[1], GetBuildingByIndex(buildingEntity.MergeResult));
+                    SelectCancel();
+                }
+
             }
 
 
+        }
+
+        public BuildingEntity GetBuildingByIndex(int? index)
+        {
+            for (int i = 0; i < buildingPools.Count; i++)
+            {
+                if (buildingPools[i].Index == index)
+                {
+                    return new BuildingEntity(buildingPools[i]);
+                }
+            }
+            return null;
         }
 
         private void SetPreviewTransform()
@@ -98,6 +130,8 @@ namespace _02_Scripts.Building
         private void CheckMerge()
         {
             if (buildingEntity == null) return;
+            Array.Fill(mergeTargetInventoryIndexs,-1);
+            mergeTargetInventoryIndexs[0] = buildingEntity.InventoryIndex;
             PointerEventData pointerData = new PointerEventData(eventSystem);
             pointerData.position = Input.mousePosition;
             List<RaycastResult> results = new List<RaycastResult>();
@@ -112,6 +146,7 @@ namespace _02_Scripts.Building
                     if (buildingEntity.CanMerge(targetBuilding))
                     {
                         canMerge = true;
+                        mergeTargetInventoryIndexs[1] = targetBuilding.InventoryIndex;
                     }
                     else
                     {

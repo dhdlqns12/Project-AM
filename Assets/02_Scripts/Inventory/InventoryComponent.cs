@@ -18,10 +18,7 @@ namespace Inventory
         private List<BuildingEntity> buildingData = new List<BuildingEntity>();
 
         private GachaBuilding gachaBuilding;
-
-        private int lastInventorySlotIndex = -1;
         private bool isAdding;
-
 
         void Awake()
         {
@@ -47,39 +44,45 @@ namespace Inventory
                 gachaBuilding.OnGetBuilding += AddBuilding;
             }
             BuildingEvents.OnBuildingConstructed += RemoveBuilding;
+            InventoryEvents.OnBuildingMerged += MergeBuilding;
         }
 
         public void AddBuilding(BuildingEntity buildingEntity)
         {
             if (isAdding) return;
+            if (buildingData.Count >= inventorySlotAmount) return;
+
             isAdding = true;
-            if (lastInventorySlotIndex >= inventorySlotAmount - 1 ) return;
-            inventorySlots[lastInventorySlotIndex + 1].SetBuildingEntity(buildingEntity);
-            lastInventorySlotIndex++;
-            buildingEntity.InventoryIndex = lastInventorySlotIndex;
+
             buildingData.Add(buildingEntity);
+            buildingEntity.InventoryIndex = buildingData.Count - 1;
+
             UpdateInventoryUI();
             isAdding = false;
         }
 
-        private void RemoveBuilding(BuildingEntity buildingEntity)
+        private void MergeBuilding(int target1, int target2, BuildingEntity newBuilding)
         {
-            if (lastInventorySlotIndex < 0) return;
-            for (int i = 0; i <= buildingData.Count; i++)
+            buildingData.RemoveAll(building => building.InventoryIndex == target1 || building.InventoryIndex == target2);
+            AddBuilding(newBuilding);
+        }
+
+        private void RemoveBuilding(BuildingEntity buildingToRemove)
+        {
+            bool removed = buildingData.Remove(buildingToRemove);
+            if (removed)
             {
-                var building = buildingData[i];
-                if (building.InventoryIndex == buildingEntity.InventoryIndex)
-                {
-                    buildingData.RemoveAt(i);
-                    break;
-                }
+                UpdateInventoryUI();
             }
-            lastInventorySlotIndex--;
-            UpdateInventoryUI();
         }
 
         public void UpdateInventoryUI()
         {
+            for(int i = 0; i < buildingData.Count; i++)
+            {
+                buildingData[i].InventoryIndex = i;
+            }
+
             for (int i = 0; i < inventorySlots.Count; i++)
             {
                 if (i < buildingData.Count)
@@ -95,9 +98,12 @@ namespace Inventory
 
         void OnDestroy()
         {
-            gachaBuilding.OnGetBuilding -= AddBuilding;
+            if (gachaBuilding != null)
+            {
+                gachaBuilding.OnGetBuilding -= AddBuilding;
+            }
             BuildingEvents.OnBuildingConstructed -= RemoveBuilding;
+            InventoryEvents.OnBuildingMerged -= MergeBuilding;
         }
-
     }
 }

@@ -33,7 +33,6 @@ namespace Inventory
                 }
 
             }
-
         }
 
         public void OnClickGachaBuilding()
