@@ -2049,6 +2049,7 @@ MonoBehaviour:
   gridSlotContainer: {fileID: 8343880220523570807}
   gridSlotPrefab: {fileID: 4036517941478960331, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
   gridSlotAmount: 5
+  previewGridComponent: {fileID: 246241421}
 --- !u!114 &8483550618081960507
 MonoBehaviour:
   m_ObjectHideFlags: 0

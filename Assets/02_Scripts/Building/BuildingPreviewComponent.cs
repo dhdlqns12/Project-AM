@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _02_Scripts.Building.Grid;
 using Inventory;
@@ -31,6 +32,11 @@ namespace _02_Scripts.Building
         private BuildingEntity buildingEntity;
         private Dictionary<Vector2Int, GameObject> gridSlots = new Dictionary<Vector2Int, GameObject>();
         private Dictionary<Vector2Int, GameObject> occupied = new Dictionary<Vector2Int, GameObject>();
+        private bool canBuild;
+        private List<Vector2Int> targetGrid = new List<Vector2Int>();
+
+
+        public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
 
 
 
@@ -54,11 +60,6 @@ namespace _02_Scripts.Building
 
             SelectCancel();
             InventoryEvents.OnBuildingSelected += SetPreview;
-
-            if (targetGridRaycaster != null)
-            {
-                Debug.Log($"Target grid raycaster: {targetGridRaycaster.name}");
-            }
         }
 
         void Update()
@@ -68,6 +69,13 @@ namespace _02_Scripts.Building
             {
                 SelectCancel();
             }
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!canBuild) return;
+                OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
+            }
+
+
         }
 
         private void SetPreviewTransform()
@@ -86,7 +94,8 @@ namespace _02_Scripts.Building
         private void CheckCanBuild()
         {
             if (buildingEntity == null) return;
-            bool canBuild = false;
+
+            targetGrid.Clear();
             foreach (var slot in occupied)
             {
                 GameObject previewSlot = slot.Value;
@@ -96,16 +105,29 @@ namespace _02_Scripts.Building
                     if (targetSlot.Occupied)
                     {
                         previewSlot.GetComponentInChildren<Image>().color = notOk;
+                        canBuild = false;
                     }
                     else
                     {
                         previewSlot.GetComponentInChildren<Image>().color = ok;
+                        canBuild = true;
+                        targetGrid.Add(targetSlot.GetCoordinates());
                     }
                 }
                 else
                 {
                     previewSlot.GetComponentInChildren<Image>().color = ok;
+                    canBuild = false;
                 }
+            }
+
+            if (targetGrid.Count == occupied.Count)
+            {
+                canBuild = true;
+            }
+            else
+            {
+                canBuild = false;
             }
 
         }
@@ -116,6 +138,8 @@ namespace _02_Scripts.Building
             pointerData.position = RectTransformUtility.WorldToScreenPoint(buildingCanvas.worldCamera, slot.transform.position);
             List<RaycastResult> results = new List<RaycastResult>();
             targetGridRaycaster.Raycast(pointerData, results);
+
+            List<Vector2Int> targetGrid = new List<Vector2Int>();
             if (results.Count > 0)
             {
                 foreach (var result in results)
@@ -123,6 +147,7 @@ namespace _02_Scripts.Building
                     GridCell cell = result.gameObject.GetComponent<GridCell>();
                     if (cell != null)
                     {
+                        targetGrid.Add(cell.GetCoordinates());
                         return cell;
                     }
                 }
