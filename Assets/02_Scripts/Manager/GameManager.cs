@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class GameManager :Singleton<GameManager>
 {
-    [SerializeField] private StageManager stageManager;
-    
     protected override void Init()
     {
         ResourceManager.Init();
         CreateStageManager();
+        CreateAudioManager();
     }
 
     //상대, 우리편 불값 분리 조정
@@ -25,7 +24,14 @@ public class GameManager :Singleton<GameManager>
     private void CreateStageManager()
     {
         GameObject stageManagerObj = new GameObject("StageManager");
-        stageManager = stageManagerObj.AddComponent<StageManager>();
+        stageManagerObj.AddComponent<StageManager>();
+    }
+
+    private void CreateAudioManager()
+    {
+        GameObject audioManagerObj = new GameObject("AudioManager");
+        audioManagerObj.AddComponent<AudioManager>();
+        
     }
     
     public void GameStart()
