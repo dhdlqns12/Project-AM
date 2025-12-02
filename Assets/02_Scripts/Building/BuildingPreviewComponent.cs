@@ -24,7 +24,7 @@ namespace _02_Scripts.Building
 
         [SerializeField] private GraphicRaycaster GridtargetGridRaycaster;
         [SerializeField] private GraphicRaycaster InventorytargetGridRaycaster;
-        [SerializeField] private EventSystem eventSystem;
+        private EventSystem eventSystem;
 
         [SerializeField] private Color ok = new Color(0, 1, 0, 0.5f);
         [SerializeField] private Color notOk = new Color(1, 0, 0, 0.3f);
@@ -73,6 +73,7 @@ namespace _02_Scripts.Building
             {
                 buildingPools.Add(new BuildingEntity(data[i]));
             }
+            eventSystem = FindObjectOfType<EventSystem>();
         }
 
         void Update()
