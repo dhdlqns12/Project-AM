@@ -27,10 +27,10 @@ namespace Inventory
             gachaPool = new List<BuildingEntity>();
             for (int i = 0; i < aaaParse.Count; i++)
             {
-                // if (aaaParse[i].BuildingLevel == BUILDING_LEVEL_CAN_GET_GACHA)
-                // {
+                if (aaaParse[i].BuildingLevel == BUILDING_LEVEL_CAN_GET_GACHA)
+                {
                     gachaPool.Add(new BuildingEntity(aaaParse[i]));
-                // }
+                }
 
             }
 

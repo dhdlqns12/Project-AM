@@ -177,6 +177,10 @@ MonoBehaviour:
   gridSlotContainer: {fileID: 1773742981}
   gridSlotPrefab: {fileID: 4036517941478960331, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
   gridSlotAmount: 5
+  targetGridRaycaster: {fileID: 6775093232456236796}
+  eventSystem: {fileID: 372772296}
+  ok: {r: 0, g: 1, b: 0, a: 0.5}
+  notOk: {r: 1, g: 0, b: 0, a: 0.5176471}
 --- !u!1001 &328094961
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -386,6 +390,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3752610942408699896, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
+      propertyPath: m_Name
+      value: GridBackground
+      objectReference: {fileID: 0}
     - target: {fileID: 4036517941478960331, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
       propertyPath: m_Name
       value: GridSlot
@@ -468,6 +476,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4231942598680815754, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4691165093281846945, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1633,7 +1645,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6775093232456236795}
-  m_Layer: 5
+  - component: {fileID: 6775093232456236797}
+  - component: {fileID: 6775093232456236796}
+  m_Layer: 10
   m_Name: BuildGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1953,8 +1967,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4724384509501008702}
   - {fileID: 970724542554372293}
+  - {fileID: 4724384509501008702}
   m_Father: {fileID: 846100051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1962,6 +1976,46 @@ RectTransform:
   m_AnchoredPosition: {x: -550, y: 0}
   m_SizeDelta: {x: 1000, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6775093232456236796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830342847914953199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!223 &6775093232456236797
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830342847914953199}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &8343880220523570807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1994,7 +2048,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSlotContainer: {fileID: 8343880220523570807}
   gridSlotPrefab: {fileID: 4036517941478960331, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
-  gridSlotAmount: 25
+  gridSlotAmount: 5
+  previewGridComponent: {fileID: 246241421}
 --- !u!114 &8483550618081960507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2009,7 +2064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.377225, g: 0.4172328, b: 0.46226418, a: 0.39215687}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
