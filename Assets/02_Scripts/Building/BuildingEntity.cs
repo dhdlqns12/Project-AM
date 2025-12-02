@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utils;
 
@@ -23,7 +24,8 @@ namespace _02_Scripts.Building
         public BuildingType BuildingType;
 
         private const int MAX_BUILDING_LEVEL = 3;
-
+        private Vector2Int minBounds = new Vector2Int(0, 0);
+        private Vector2Int maxBounds = new Vector2Int(4, 4);
         public BuildingEntity(BuildingData buildingData)
         {
             Index = buildingData.Index;
@@ -66,24 +68,6 @@ namespace _02_Scripts.Building
             if(buildingEntity.BuildingLevel != this.BuildingLevel) return false;
             if(buildingEntity.InventoryIndex == this.InventoryIndex) return false;
             return true;
-        }
-        public void Rotate()
-        {
-            var rotatedCoordinates = new List<Vector2Int>();
-            Debug.Log($"회전!");
-            Debug.Log($"중심좌표 : {CenterCoordinate}");
-            Debug.Log($"현재좌표 : ${BuildingCoordinates.ToDebugString()}");
-            foreach (var coord in BuildingCoordinates)
-            {
-                Vector2Int relativePoint = coord - CenterCoordinate;
-                int newX = relativePoint.y;
-                int newY = -relativePoint.x;
-                Vector2Int rotatedRelativePoint = new Vector2Int(newX, newY);
-                Vector2Int newWorldCoord = rotatedRelativePoint + CenterCoordinate;
-                rotatedCoordinates.Add(newWorldCoord);
-            }
-            BuildingCoordinates = rotatedCoordinates;
-            Debug.Log($"변환좌표 : ${BuildingCoordinates.ToDebugString()}");
         }
 
         private List<Vector2Int> GetBuildingCoordinates(string buildingCoordinateString)

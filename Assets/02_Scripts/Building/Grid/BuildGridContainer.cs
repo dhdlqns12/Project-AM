@@ -72,6 +72,7 @@ namespace _02_Scripts.Building.Grid
                 }
             }
             BuildingEvents.OnBuildingConstructedInvoked(buildings);
+            BuildingEvents.OnBuildingDestroyedOneInvoked(buildingEntity);
         }
 
 
