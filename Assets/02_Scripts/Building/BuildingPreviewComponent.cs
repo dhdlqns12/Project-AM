@@ -102,7 +102,7 @@ namespace _02_Scripts.Building
             if (Input.GetKey(KeyCode.Space))
             {
                 if (buildingEntity == null) return;
-                RotatePreview();
+                // RotatePreview();
             }
         }
 
@@ -118,13 +118,7 @@ namespace _02_Scripts.Building
             return null;
         }
 
-        private void RotatePreview()
-        {
-            if (isRotating) return;
-            isRotating = true;
-            buildingEntity.Rotate();
-            isRotating = false;
-        }
+
 
         private void SetPreviewTransform()
         {
