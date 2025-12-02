@@ -45,6 +45,7 @@ namespace Inventory
             }
             BuildingEvents.OnBuildingConstructedOne += RemoveBuilding;
             InventoryEvents.OnBuildingMerged += MergeBuilding;
+            BuildingEvents.OnBuildingRetrieve += AddBuilding;
         }
 
         public void AddBuilding(BuildingEntity buildingEntity)
@@ -108,6 +109,7 @@ namespace Inventory
             }
             BuildingEvents.OnBuildingConstructedOne -= RemoveBuilding;
             InventoryEvents.OnBuildingMerged -= MergeBuilding;
+            BuildingEvents.OnBuildingRetrieve -= AddBuilding;
         }
     }
 }
