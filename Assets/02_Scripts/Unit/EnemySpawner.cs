@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour
     [Header("설정")]
     [SerializeField] private bool autoStart = true;
 
-    [Header("새로운 방식 설정 - 대형 배치")]
+    [Header("대형 배치")]
     [SerializeField] private float frontLineOffset = -1.5f;  // 앞줄 오프셋
     [SerializeField] private float backLineOffset = -0.5f;  // 뒷줄 오프셋
     [SerializeField] private float unitSpacing = 0.8f;      // 유닛 간 간격 (Y축)
