@@ -1,41 +1,55 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager :Singleton<GameManager>
 {
+    [SerializeField] private AudioManager audioManager;
+    
+    public AudioManager AudioManager
+    {
+        get { return audioManager; }
+        set { audioManager = value; }
+    }
+    
     protected override void Init()
     {
         ResourceManager.Init();
         CreateStageManager();
-        CreateAudioManager();
+        audioManager.Init();
         CreateUnitDataManager();
         CreateEnemySpawnerManager();
+
+    }
+
+    private void Start()
+    {
+        
     }
 
     //상대, 우리편 불값 분리 조정
-    private bool isDead;
+    private bool isPlayerDead;
 
-    public bool IsDead
+    public bool IsPlayerDead
     {
-        get => isDead;
-        set => isDead = value;
+        get => isPlayerDead;
+        set => isPlayerDead = value; 
     }
-    
+
+    private bool isEnemyDead;
+
+    public bool IsEnemyDead
+    {
+        get => isEnemyDead;
+        set => isEnemyDead = value;
+    }
+
     private void CreateStageManager()
     {
         GameObject stageManagerObj = new GameObject("StageManager");
         stageManagerObj.AddComponent<StageManager>();
     }
-
-    private void CreateAudioManager()
-    {
-        GameObject audioManagerObj = new GameObject("AudioManager");
-        audioManagerObj.AddComponent<AudioManager>();
-        
-    }
-
+    
     private void CreateUnitDataManager()
     {
         GameObject unitDataManagerObj = new GameObject("UnitDataManager");
@@ -53,22 +67,40 @@ public class GameManager :Singleton<GameManager>
         
     }
 
-    public void GameOver()
+    public void PlayerDead()
     {
-        //게임씬 오브젝트로부터 정보를 전달받아 isDead전환
-        
-        if (isDead)
+        isPlayerDead = true;
+        GameOver();
+    }
+
+    public void EnemyDead()
+    {
+        isEnemyDead = true;
+        GameOver();
+    }
+
+    private void GameOver()
+    {
+        if (isEnemyDead)
         {
-            //플레이어 패배
+            Debug.Log("플레이어 승리");
+            //게임 정지 , 플레이어 승리 UI
         }
-        
-        //플레이어 승리
-        isDead = true;
+        else if (isPlayerDead)
+        {
+            Debug.Log("플레이어 패배");
+            //게임 정지 , 플레이어 패배 UI
+        }
+        else
+        {
+            Debug.Log("승패 판정 불가");
+        }
     }
     
     public void ResetStageData()
     {
-        isDead = false;
+        isPlayerDead = false;
+        isEnemyDead  = false;
         StageManager.Instance.ResetGold();
         /*
          * 플레이어 유닛,건물 초기화
