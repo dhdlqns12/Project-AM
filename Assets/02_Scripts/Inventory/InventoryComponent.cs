@@ -63,9 +63,13 @@ namespace Inventory
 
         private void MergeBuilding(int target1, int target2, BuildingEntity newBuilding)
         {
-            buildingData.RemoveAll(building => building.InventoryIndex == target1 || building.InventoryIndex == target2);
-            AddBuilding(newBuilding);
+            buildingData.RemoveAt(target1);
+            newBuilding.InventoryIndex = buildingData[target2].InventoryIndex;
+            buildingData[target2] = newBuilding;
+            UpdateInventoryUI();
         }
+
+
 
         private void RemoveBuilding(BuildingEntity buildingToRemove)
         {
