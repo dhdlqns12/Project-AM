@@ -15,21 +15,23 @@ public class StageManager : Singleton<StageManager>
         Debug.Log("스테이지 매니저 초기화");
     }
 
-    public void PlusGold(int amount)
+    public void IncreaseGold(int amount)
     {
         if(amount <=0) return;
         gold += amount;
     }
 
-    public void MinusGold(int amount)
+    public void ConsumeGold(int amount)
     {
         if(amount <=0) return;
         gold -= amount;
     }
 
-    public void ClearGold()
+    public void ResetGold()
     {
         gold = 0;
     }
+    
+    //ui랑 연결 방식 고민
     
 }
