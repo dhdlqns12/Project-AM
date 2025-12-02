@@ -9,7 +9,7 @@ public enum AudioMixerGroupName
     SFX
 }
 
-public class AudioManager : Singleton<AudioManager>
+public class AudioManager : MonoBehaviour
 {
     [Header("UserAudioMixer")]
     [SerializeField] private AudioMixerGroup masterMixerGroup;
@@ -41,7 +41,7 @@ public class AudioManager : Singleton<AudioManager>
     /// 오디오매니저 초기화
     /// 오디오 믹서 메핑, 
     /// </summary>
-    protected override void Init()
+    public void Init()
     {
         userAudios = new()
         {
@@ -49,6 +49,7 @@ public class AudioManager : Singleton<AudioManager>
             { AudioMixerGroupName.BGM, bgmMixerGroup },
             { AudioMixerGroupName.SFX, sfxMixerGroup },
         };
+        Debug.Log("오디오매니저 초기화");
     }
 
     #region 볼륨 제어
@@ -92,7 +93,11 @@ public class AudioManager : Singleton<AudioManager>
 
     private void PlayBGM(AudioClip clip, float volume = 1.0f)
     {
-        if(clip == null) return;
+        if (clip == null)
+        {
+            Debug.Log("배경음 클립이 비어있습니다.");
+            return;
+        }
         if(bgmAudioSource.clip == clip)  return;
         
         bgmAudioSource.clip = clip;
