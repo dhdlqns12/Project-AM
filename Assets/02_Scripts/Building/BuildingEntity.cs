@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 namespace _02_Scripts.Building
 {
@@ -18,6 +19,10 @@ namespace _02_Scripts.Building
         public float? GoldProductionAmount;
         public float? UnitStatMultiplier;
         public int? MergeResult;
+        public int InventoryIndex;
+        public BuildingType BuildingType;
+
+        private const int MAX_BUILDING_LEVEL = 3;
 
         public BuildingEntity(BuildingData buildingData)
         {
@@ -33,6 +38,52 @@ namespace _02_Scripts.Building
             GoldProductionAmount = buildingData.GoldProductionAmount;
             UnitStatMultiplier = buildingData.UnitStatMultiplier;
             MergeResult = buildingData.MergeResult;
+            BuildingType = buildingData.BuildingType;
+        }
+
+        public BuildingEntity(BuildingEntity buildingEntity)
+        {
+            Index = buildingEntity.Index;
+            BuildingName = buildingEntity.BuildingName;
+            BuildingLevel = buildingEntity.BuildingLevel;
+            BuildingCoordinates = buildingEntity.BuildingCoordinates;
+            CenterCoordinate = new Vector2Int(0, 0);
+            UnitProductionCycle = buildingEntity.UnitProductionCycle;
+            ProductionUnitType = buildingEntity.ProductionUnitType;
+            UnitPerCycle = buildingEntity.UnitPerCycle;
+            GoldProductionCycle = buildingEntity.GoldProductionCycle;
+            GoldProductionAmount = buildingEntity.GoldProductionAmount;
+            UnitStatMultiplier = buildingEntity.UnitStatMultiplier;
+            MergeResult = buildingEntity.MergeResult;
+            BuildingType = buildingEntity.BuildingType;
+        }
+
+        public bool CanMerge(BuildingEntity buildingEntity)
+        {
+            if (BuildingLevel == MAX_BUILDING_LEVEL) return false;
+            if(buildingEntity == null) return false;
+            if(buildingEntity.BuildingType != this.BuildingType) return false;
+            if(buildingEntity.BuildingLevel != this.BuildingLevel) return false;
+            if(buildingEntity.InventoryIndex == this.InventoryIndex) return false;
+            return true;
+        }
+        public void Rotate()
+        {
+            var rotatedCoordinates = new List<Vector2Int>();
+            Debug.Log($"회전!");
+            Debug.Log($"중심좌표 : {CenterCoordinate}");
+            Debug.Log($"현재좌표 : ${BuildingCoordinates.ToDebugString()}");
+            foreach (var coord in BuildingCoordinates)
+            {
+                Vector2Int relativePoint = coord - CenterCoordinate;
+                int newX = relativePoint.y;
+                int newY = -relativePoint.x;
+                Vector2Int rotatedRelativePoint = new Vector2Int(newX, newY);
+                Vector2Int newWorldCoord = rotatedRelativePoint + CenterCoordinate;
+                rotatedCoordinates.Add(newWorldCoord);
+            }
+            BuildingCoordinates = rotatedCoordinates;
+            Debug.Log($"변환좌표 : ${BuildingCoordinates.ToDebugString()}");
         }
 
         private List<Vector2Int> GetBuildingCoordinates(string buildingCoordinateString)

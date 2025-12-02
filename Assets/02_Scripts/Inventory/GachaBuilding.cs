@@ -12,7 +12,8 @@ namespace Inventory
 
         public event Action<BuildingEntity> OnGetBuilding;
         private List<BuildingEntity> gachaPool;
-        private const int BUILDING_LEVEL_CAN_GET_GACHA = 1;
+        private const int BUILDING_LEVEL_CAN_GET_GACHA = 2;
+        private const int GACHA_COST = 100;
 
 
         void Awake()
@@ -22,24 +23,24 @@ namespace Inventory
 
         void Init()
         {
-            var aaaa = Resources.Load<TextAsset>("Data/BuildingData").text;
-            var aaaParse = JsonConvert.DeserializeObject<List<BuildingData>>(aaaa);
+            var data = ResourceManager.LoadJsonDataList<BuildingData>("BuildingData");
             gachaPool = new List<BuildingEntity>();
-            for (int i = 0; i < aaaParse.Count; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                if (aaaParse[i].BuildingLevel == BUILDING_LEVEL_CAN_GET_GACHA)
+                if (data[i].BuildingLevel == BUILDING_LEVEL_CAN_GET_GACHA)
                 {
-                    gachaPool.Add(new BuildingEntity(aaaParse[i]));
+                    gachaPool.Add(new BuildingEntity(data[i]));
                 }
-
             }
-
+            StageManager.Instance.IncreaseGold(GACHA_COST * 10);
         }
 
         public void OnClickGachaBuilding()
         {
+            if (StageManager.Instance.Gold < GACHA_COST) return;
             int random = UnityEngine.Random.Range(0, gachaPool.Count);
-            OnGetBuilding?.Invoke(gachaPool[random]);
+            OnGetBuilding?.Invoke(new BuildingEntity(gachaPool[random]));
+            StageManager.Instance.ConsumeGold(GACHA_COST);
         }
 
 

@@ -7,25 +7,25 @@ namespace Inventory
 {
     public class InventorySlot : MonoBehaviour
     {
-        private BuildingEntity buildingEntity;
+        public BuildingEntity BuildingEntity;
         [SerializeField] private TextMeshProUGUI buildingNameText;
 
         public void SetBuildingEntity(BuildingEntity building)
         {
-            this.buildingEntity = building;
+            this.BuildingEntity = building;
             buildingNameText.text = building.BuildingName;
         }
 
         public void Clear()
         {
-            this.buildingEntity = null;
+            this.BuildingEntity = null;
             buildingNameText.text = "";
         }
 
         public void SelectBuilding()
         {
-            if (buildingEntity == null) return;
-            InventoryEvents.OnBuildingSelectedInvoked(buildingEntity);
+            if (BuildingEntity == null) return;
+            InventoryEvents.OnBuildingSelectedInvoked(BuildingEntity);
         }
 
     }

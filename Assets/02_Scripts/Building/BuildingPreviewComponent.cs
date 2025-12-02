@@ -22,7 +22,8 @@ namespace _02_Scripts.Building
         [SerializeField] private GameObject gridSlotPrefab;
         [SerializeField] private int gridSlotAmount = 5;
 
-        [SerializeField] private GraphicRaycaster targetGridRaycaster;
+        [SerializeField] private GraphicRaycaster GridtargetGridRaycaster;
+        [SerializeField] private GraphicRaycaster InventorytargetGridRaycaster;
         [SerializeField] private EventSystem eventSystem;
 
         [SerializeField] private Color ok = new Color(0, 1, 0, 0.5f);
@@ -34,13 +35,18 @@ namespace _02_Scripts.Building
         private Dictionary<Vector2Int, GameObject> occupied = new Dictionary<Vector2Int, GameObject>();
         private bool canBuild;
         private List<Vector2Int> targetGrid = new List<Vector2Int>();
+        private bool canMerge;
 
+        private List<BuildingEntity> buildingPools = new List<BuildingEntity>();
+        private int[] mergeTargetInventoryIndexs = new int[2];
+        private bool isRotating;
 
         public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
 
 
 
-        void Awake()
+
+        void Start()
         {
             Init();
         }
@@ -60,6 +66,13 @@ namespace _02_Scripts.Building
 
             SelectCancel();
             InventoryEvents.OnBuildingSelected += SetPreview;
+            var data = ResourceManager.LoadJsonDataList<BuildingData>("BuildingData");
+            if (data == null) return;
+            if (data.Length == 0) return;
+            for (int i = 0; i < data.Length; i++)
+            {
+                buildingPools.Add(new BuildingEntity(data[i]));
+            }
         }
 
         void Update()
@@ -71,11 +84,46 @@ namespace _02_Scripts.Building
             }
             if (Input.GetMouseButtonDown(0))
             {
-                if (!canBuild) return;
-                OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
+                if (canBuild && !canMerge)
+                {
+                    OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
+                    SelectCancel();
+                }else
+                if (canMerge && !canBuild)
+                {
+                    if (buildingEntity == null) return;
+                    if(mergeTargetInventoryIndexs[0] == -1 || mergeTargetInventoryIndexs[1] == -1 ) return;
+                    if (buildingEntity.MergeResult == null) return;
+                    InventoryEvents.OnBuildingMergedInvoked(mergeTargetInventoryIndexs[0],mergeTargetInventoryIndexs[1], GetBuildingByIndex(buildingEntity.MergeResult));
+                    SelectCancel();
+                }
             }
 
+            if (Input.GetKey(KeyCode.Space))
+            {
+                if (buildingEntity == null) return;
+                RotatePreview();
+            }
+        }
 
+        public BuildingEntity GetBuildingByIndex(int? index)
+        {
+            for (int i = 0; i < buildingPools.Count; i++)
+            {
+                if (buildingPools[i].Index == index)
+                {
+                    return new BuildingEntity(buildingPools[i]);
+                }
+            }
+            return null;
+        }
+
+        private void RotatePreview()
+        {
+            if (isRotating) return;
+            isRotating = true;
+            buildingEntity.Rotate();
+            isRotating = false;
         }
 
         private void SetPreviewTransform()
@@ -89,6 +137,40 @@ namespace _02_Scripts.Building
                 out Vector2 localPoint);
             gridContainerWrapper.anchoredPosition = localPoint;
             CheckCanBuild();
+            CheckMerge();
+        }
+
+        private void CheckMerge()
+        {
+            if (buildingEntity == null) return;
+            Array.Fill(mergeTargetInventoryIndexs,-1);
+            mergeTargetInventoryIndexs[0] = buildingEntity.InventoryIndex;
+            PointerEventData pointerData = new PointerEventData(eventSystem);
+            pointerData.position = Input.mousePosition;
+            List<RaycastResult> results = new List<RaycastResult>();
+            InventorytargetGridRaycaster.Raycast(pointerData, results);
+            if (results.Count > 0)
+            {
+                foreach (var result in results)
+                {
+                    InventorySlot slot = result.gameObject.GetComponent<InventorySlot>();
+                    if(slot == null) continue;
+                    BuildingEntity targetBuilding = slot.BuildingEntity;
+                    if (buildingEntity.CanMerge(targetBuilding))
+                    {
+                        canMerge = true;
+                        mergeTargetInventoryIndexs[1] = targetBuilding.InventoryIndex;
+                    }
+                    else
+                    {
+                        canMerge = false;
+                    }
+                }
+            }
+            else
+            {
+                canMerge = false;
+            }
         }
 
         private void CheckCanBuild()
@@ -137,7 +219,7 @@ namespace _02_Scripts.Building
             PointerEventData pointerData = new PointerEventData(eventSystem);
             pointerData.position = RectTransformUtility.WorldToScreenPoint(buildingCanvas.worldCamera, slot.transform.position);
             List<RaycastResult> results = new List<RaycastResult>();
-            targetGridRaycaster.Raycast(pointerData, results);
+            GridtargetGridRaycaster.Raycast(pointerData, results);
 
             List<Vector2Int> targetGrid = new List<Vector2Int>();
             if (results.Count > 0)

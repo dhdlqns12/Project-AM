@@ -1,15 +1,16 @@
 using System;
+using System.Collections.Generic;
 
 namespace _02_Scripts.Building
 {
     public static class BuildingEvents
     {
-        public static event Action<BuildingEntity> OnBuildingConstructed;
+        public static event Action<List<BuildingEntity>> OnBuildingConstructed;
         public static event Action<BuildingEntity> OnBuildingDestroyed;
 
-        public static void OnBuildingConstructedInvoked(BuildingEntity buildingEntity)
+        public static void OnBuildingConstructedInvoked(List<BuildingEntity> list)
         {
-            OnBuildingConstructed?.Invoke(buildingEntity);
+            OnBuildingConstructed?.Invoke(list);
         }
 
         public static void OnBuildingDestroyedInvoked(BuildingEntity buildingEntity)
