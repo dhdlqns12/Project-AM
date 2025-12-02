@@ -60,8 +60,6 @@ namespace _02_Scripts.Building
 
         public bool CanMerge(BuildingEntity buildingEntity)
         {
-            Debug.Log(buildingEntity.ToDebugString());
-            Debug.Log(this.ToDebugString());
             if (BuildingLevel == MAX_BUILDING_LEVEL) return false;
             if(buildingEntity == null) return false;
             if(buildingEntity.BuildingType != this.BuildingType) return false;

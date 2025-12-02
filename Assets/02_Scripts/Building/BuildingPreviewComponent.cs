@@ -64,12 +64,11 @@ namespace _02_Scripts.Building
 
             SelectCancel();
             InventoryEvents.OnBuildingSelected += SetPreview;
+            var data = ResourceManager.LoadJsonDataList<BuildingData>("BuildingData");
 
-            var aaaa = Resources.Load<TextAsset>("Data/BuildingData").text;
-            var aaaParse = JsonConvert.DeserializeObject<List<BuildingData>>(aaaa);
-            for (int i = 0; i < aaaParse.Count; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                buildingPools.Add(new BuildingEntity(aaaParse[i]));
+                buildingPools.Add(new BuildingEntity(data[i]));
             }
         }
 
