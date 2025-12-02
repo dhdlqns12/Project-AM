@@ -5,6 +5,7 @@ using UnityEngine;
 public  static class ResourceManager
 {
    private static Dictionary<string, TextAsset> textAssets = new ();
+   private static Dictionary<string, AudioClip> audioAssets = new ();
 
    /// <summary>
    /// Resource매니저 초기화 로직
@@ -32,6 +33,13 @@ public  static class ResourceManager
          textAssets[kvp.name] = kvp;
          Debug.Log(kvp.name+ " Json데이터 로드 완료");
       }
+      
+      var audios= Resources.LoadAll<AudioClip>("Audio");
+      foreach (var kvp in audios)
+      {
+         audioAssets[kvp.name] = kvp;
+         Debug.Log(kvp.name +"audio데이터 로드 완료");
+      }
    }
    
    
@@ -51,7 +59,7 @@ public  static class ResourceManager
       return asset;
    }
 
-   
+   #region Json데이터 로드 매서드
    
    /// <summary>
    /// Json파일을 로드하여 T타입의 단일 객체를 반환하는 매서드
@@ -93,5 +101,10 @@ public  static class ResourceManager
       
       return JsonConvert.DeserializeObject<T[]>(json.text);
    }
+
+   #endregion
+   
+   
+   
    
 }

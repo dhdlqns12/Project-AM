@@ -1,0 +1,11 @@
+﻿[
+  {
+    "Index": 0,
+    "Category": "Unit",
+    "Type": "Warrior",
+    "State": "Attack",
+    "Action": "Swing",
+    "File_Name": "warrior_swing",
+    "Volume": 0.2
+  }
+]

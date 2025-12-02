@@ -56,7 +56,7 @@ MonoBehaviour:
   titleBGM: {fileID: 0}
   inGameBGM: {fileID: 0}
   clickSFX: {fileID: 0}
-  warriorAttackSFX: {fileID: 0}
+  warriorAttackSFX: {fileID: 8300000, guid: 5a7b1f158d6d847b3a6744338b33ea4a, type: 3}
   archerAttackSFX: {fileID: 0}
   damageSFX: {fileID: 0}
   deathSFX: {fileID: 0}

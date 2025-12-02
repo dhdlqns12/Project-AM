@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager :Singleton<GameManager>
 {
     [SerializeField] private AudioManager audioManager;
-
+    
     public AudioManager AudioManager
     {
         get { return audioManager; }
@@ -18,6 +20,11 @@ public class GameManager :Singleton<GameManager>
         CreateUnitDataManager();
         CreateEnemySpawnerManager();
 
+    }
+
+    private void Start()
+    {
+        
     }
 
     //상대, 우리편 불값 분리 조정
@@ -43,14 +50,6 @@ public class GameManager :Singleton<GameManager>
         stageManagerObj.AddComponent<StageManager>();
     }
     
-
-    private void CreateAudioManager()
-    {
-        GameObject audioManagerObj = new GameObject("AudioManager");
-        audioManagerObj.AddComponent<AudioManager>();
-        
-    }
-
     private void CreateUnitDataManager()
     {
         GameObject unitDataManagerObj = new GameObject("UnitDataManager");
