@@ -11,6 +11,7 @@ public class GameManager :Singleton<GameManager>
     {
         ResourceManager.Init();
         CreateStageManager();
+        CreateUnitDataManager();
     }
 
     private bool isDead;
@@ -20,10 +21,17 @@ public class GameManager :Singleton<GameManager>
         get => isDead;
         set => isDead = value;
     }
+
     private void CreateStageManager()
     {
         GameObject stageManagerObj = new GameObject("StageManager");
         stageManager = stageManagerObj.AddComponent<StageManager>();
+    }
+
+    private void CreateUnitDataManager()
+    {
+        GameObject unitDataManagerObj = new GameObject("UnitDataManager");
+        unitDataManagerObj.AddComponent<UnitDataManager>();
     }
     
     public void GameStart()
