@@ -19,6 +19,7 @@ namespace _02_Scripts.Building
         public float? UnitStatMultiplier;
         public int? MergeResult;
         public int InventoryIndex;
+        public BuildingType BuildingType;
 
         public BuildingEntity(BuildingData buildingData)
         {
@@ -34,6 +35,7 @@ namespace _02_Scripts.Building
             GoldProductionAmount = buildingData.GoldProductionAmount;
             UnitStatMultiplier = buildingData.UnitStatMultiplier;
             MergeResult = buildingData.MergeResult;
+            BuildingType = buildingData.BuildingType;
         }
 
         private List<Vector2Int> GetBuildingCoordinates(string buildingCoordinateString)

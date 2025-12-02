@@ -22,7 +22,8 @@ namespace _02_Scripts.Building
         [SerializeField] private GameObject gridSlotPrefab;
         [SerializeField] private int gridSlotAmount = 5;
 
-        [SerializeField] private GraphicRaycaster targetGridRaycaster;
+        [SerializeField] private GraphicRaycaster GridtargetGridRaycaster;
+        [SerializeField] private GraphicRaycaster InventorytargetGridRaycaster;
         [SerializeField] private EventSystem eventSystem;
 
         [SerializeField] private Color ok = new Color(0, 1, 0, 0.5f);
@@ -90,6 +91,12 @@ namespace _02_Scripts.Building
                 out Vector2 localPoint);
             gridContainerWrapper.anchoredPosition = localPoint;
             CheckCanBuild();
+            CheckMerge();
+        }
+
+        private void CheckMerge()
+        {
+            if (buildingEntity == null) return;
         }
 
         private void CheckCanBuild()
@@ -138,7 +145,7 @@ namespace _02_Scripts.Building
             PointerEventData pointerData = new PointerEventData(eventSystem);
             pointerData.position = RectTransformUtility.WorldToScreenPoint(buildingCanvas.worldCamera, slot.transform.position);
             List<RaycastResult> results = new List<RaycastResult>();
-            targetGridRaycaster.Raycast(pointerData, results);
+            GridtargetGridRaycaster.Raycast(pointerData, results);
 
             List<Vector2Int> targetGrid = new List<Vector2Int>();
             if (results.Count > 0)

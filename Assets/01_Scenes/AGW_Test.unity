@@ -177,7 +177,8 @@ MonoBehaviour:
   gridSlotContainer: {fileID: 1773742981}
   gridSlotPrefab: {fileID: 4036517941478960331, guid: 456702fa7db46bf4894612f10d1914f8, type: 3}
   gridSlotAmount: 5
-  targetGridRaycaster: {fileID: 6775093232456236796}
+  GridtargetGridRaycaster: {fileID: 6775093232456236796}
+  InventorytargetGridRaycaster: {fileID: 4443992077110055992}
   eventSystem: {fileID: 372772296}
   ok: {r: 0, g: 1, b: 0, a: 0.5}
   notOk: {r: 1, g: 0, b: 0, a: 0.5176471}
@@ -570,7 +571,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 846100052}
+      - m_Target: {fileID: 4443992077110055991}
         m_TargetAssemblyTypeName: Inventory.InventoryComponent, Assembly-CSharp
         m_MethodName: ToggleInventory
         m_Mode: 6
@@ -629,14 +630,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 846100051}
-  - component: {fileID: 846100052}
   m_Layer: 5
   m_Name: ControlPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &846100051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -659,23 +659,6 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 1600, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &846100052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 846100050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f871bdb9a84517f4088244b42b0fce1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controlPanel: {fileID: 846100050}
-  inventoryContainer: {fileID: 5596033907179263393}
-  inventorySlotPrefab: {fileID: 2136384602553987405, guid: 370d6d396dbba4f49be5deb13485d640, type: 3}
-  inventorySlotAmount: 16
-  gachaButtonComponent: {fileID: 2140603202}
 --- !u!1 &905493942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,7 +1281,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 846100052}
+      - m_Target: {fileID: 4443992077110055991}
         m_TargetAssemblyTypeName: Inventory.InventoryComponent, Assembly-CSharp
         m_MethodName: ToggleInventory
         m_Mode: 6
@@ -1682,6 +1665,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4443992077110055990}
+  - component: {fileID: 4443992077110055991}
+  - component: {fileID: 4443992077110055993}
+  - component: {fileID: 4443992077110055992}
   m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
@@ -1703,7 +1689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.764151, g: 0.4577697, b: 0.4577697, a: 0.39215687}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1813,6 +1799,63 @@ RectTransform:
   m_AnchoredPosition: {x: 400, y: 0}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4443992077110055991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292599752893939280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f871bdb9a84517f4088244b42b0fce1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controlPanel: {fileID: 846100050}
+  inventoryContainer: {fileID: 5596033907179263393}
+  inventorySlotPrefab: {fileID: 2136384602553987405, guid: 370d6d396dbba4f49be5deb13485d640, type: 3}
+  inventorySlotAmount: 16
+  gachaButtonComponent: {fileID: 2140603202}
+--- !u!114 &4443992077110055992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292599752893939280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 1847
+--- !u!223 &4443992077110055993
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292599752893939280}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &4512521086110144276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1992,7 +2035,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2871
 --- !u!223 &6775093232456236797
 Canvas:
   m_ObjectHideFlags: 0

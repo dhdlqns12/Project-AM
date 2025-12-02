@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
 namespace _02_Scripts.Building.Grid
 {
@@ -27,8 +28,17 @@ namespace _02_Scripts.Building.Grid
         {
             Occupied = true;
             BuildingEntity = building;
-            gameObject.GetComponentInChildren<Image>().color = Color.green;
-
+            Color color = new Color();
+            switch (BuildingEntity.BuildingType)
+            {
+                case BuildingType.Farm: color = Color.yellow;
+                    break;
+                case BuildingType.Barracks: color = Color.red;
+                    break;
+                case BuildingType.Tower: color = Color.green;
+                    break;
+            }
+            gameObject.GetComponentInChildren<Image>().color = color;
         }
 
     }
