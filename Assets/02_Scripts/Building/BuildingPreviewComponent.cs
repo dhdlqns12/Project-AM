@@ -45,7 +45,8 @@ namespace _02_Scripts.Building
 
 
 
-        void Awake()
+
+        void Start()
         {
             Init();
         }
@@ -66,7 +67,8 @@ namespace _02_Scripts.Building
             SelectCancel();
             InventoryEvents.OnBuildingSelected += SetPreview;
             var data = ResourceManager.LoadJsonDataList<BuildingData>("BuildingData");
-
+            if (data == null) return;
+            if (data.Length == 0) return;
             for (int i = 0; i < data.Length; i++)
             {
                 buildingPools.Add(new BuildingEntity(data[i]));
