@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    #region Singleton 구조 적용_Basic 반 수업 자료
+    #region Singleton 구조 적용     <<- Basic 반 수업 자료
 
     private static UIManager instance;
     public static UIManager Instance
@@ -33,22 +33,22 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    #region SerializeField 변수 생성_타 Class에서 참조할 가능성이 있을 경우 Property 형식 적용할 것
+    #region SerializeField 변수 생성 (타 Class에서 참조할 가능성이 있을 경우 Property 형식 적용할 것)
 
+    // Canvas 전환에 사용할 Object 모음
     [Header("Canvases")]
     [SerializeField] private GameObject canvasSelectStage;
     [SerializeField] private GameObject canvasPlayGame;
     [SerializeField] private GameObject canvasOptions;
-    [SerializeField] private GameObject canvasGameEnd;
+    [SerializeField] private GameObject canvasGameResult;
 
-    [Header("Stages")]
-    [SerializeField] private GameObject stageSpawnPosition;     // Stage를 생성할 위치
-    [SerializeField] private GameObject stage;
-
+    // Option 팝업에 사용할 Object 모음
     [Header("Options")]
-    [SerializeField] private GameObject[] optionCase;           // Option 버튼을 누른 위치 판단
+    [SerializeField] private GameObject optionCase1;
+    [SerializeField] private GameObject optionCase2;
 
-    [Header("GameEnds")]
+    // GameResult 상황에 사용할 Object 모음
+    [Header("GameResults")]
     [SerializeField] private GameObject gameClear;
     [SerializeField] private GameObject gameOver;
 
@@ -60,124 +60,141 @@ public class UIManager : MonoBehaviour
     // Singleton_GameManager 정보를 참조할 변수 생성
     private GameManager gameManager;
 
+    // 선택 중인 Scene을 판별할 변수 정의
+    private string selectedScene;
+
     private void Awake()
     {
-        #region Singleton 로직
+        #region Singleton 로직    <<- Basic 반 수업 자료
 
-        if (instance != null & instance != this)
+        if (instance != null && instance != this)
         {
-            Destroy(instance.gameObject);
+            Destroy(gameObject);
+            return;
         }
-        else
-        {
-            DontDestroyOnLoad(this.gameObject);
-        }
+
+        instance = this;
+        thisGO = this.gameObject;
+
+        DontDestroyOnLoad(this.gameObject);
 
         #endregion
 
         #region null 체크 로직 모음
 
         // Canvases null 체크 로직
-        if (canvasSelectStage == null || canvasPlayGame == null || canvasOptions == null || canvasGameEnd == null)
+        if (canvasSelectStage == null || canvasPlayGame == null || canvasOptions == null || canvasGameResult == null)
         {
             Debug.LogError("Canvases가 정상적으로 연동되지 않음");
             return;
         }
 
-        // Stages null 체크 로직
-        if (stageSpawnPosition == null || stage == null)
-        {
-            Debug.LogError("Stages가 정상적으로 연동되지 않음");
-            return;
-        }
-
         // Options null 체크 로직
-        if (optionCase == null)
+        if (optionCase1 == null || optionCase2 == null)
         {
             Debug.LogError("Options가 정상적으로 연동되지 않음");
             return;
         }
 
-        // GameEnds null 체크 로직
+        // GameResults null 체크 로직
         if (gameClear == null || gameOver == null)
         {
-            Debug.LogError("GameEnds가 정상적으로 연동되지 않음");
+            Debug.LogError("GameResults가 정상적으로 연동되지 않음");
             return;
         }
 
         #endregion
-
-        // 해당 Script를 Component로 가진 객체의 정보 갱신
-        thisGO = this.gameObject;
     }
     
     private void Start()
     {
-        // OnCanvasStageSelect();      // 기능 Test용 메서드, 최종 제출 시 삭제 예정
+        // SwitchCanvas(canvasSelectStage);      // 기능 Test용 메서드, 최종 제출 시 삭제 예정
     }
-
 
 
     #region 버튼 동작 메서드 모음
 
-    #region     메서드 내에서만 사용할 메서드 모음
 
-    // 메서드 - 부모 Object 제외 모두 닫기 (SetActive(false))
+    /// <summary>
+    /// 메서드 내에서만 사용할 메서드 모음
+    /// </summary>
+    
+    // 메서드 - 매개 변수 Object의 자식 Object 모두 비활성화
     private void OffSetActiveInChild(GameObject go)
     {
-        // 반복문_Object의 자식 Object 비활성화_매개 변수
+        // 반복문_매개 변수 Object의 자식 Object 비활성화
         foreach (Transform child in go.transform)
         {
             child.gameObject.SetActive(false);
         }
     }
 
-    // 메서드 - 매개 변수와 동일한 이름을 가진 Scene이 이미 Load되어 있는지 체크 (feat. GPT)
-    private bool IsSceneLoaded(string sceneName)
+    // 메서드 - 선택 중인 Scene 값과 동일한 이름을 가진 Scene이 이미 Load되어 있는지 체크 (feat. GPT)
+    private bool IsSceneLoaded()
     {
         // 현재 Load된 Scene의 개수 변수 값 생성 및 갱신_일회용
         int count = SceneManager.sceneCount;
 
-        // 반복문 - Scene 이름 판별_매개변수와 이름이 같은가?
+        // 반복문 - Scene 이름 판별_선택 중인 Scene 값과 이름이 같은가?
         for (int i = 0; i < count; i++)
         {
             // Scene 정보를 담을 변수 생성 및 갱신_일회용
             Scene scene = SceneManager.GetSceneAt(i);
 
-            // 반복문 - Scene 이름이 매개 변수와 같을 경우
-            if (scene.name == sceneName)
+            // 조건문 - Scene 이름이 선택 중인 Scene 값과 같을 경우
+            if (scene.name == selectedScene)
             {
+                // bool 값 반환_true
                 return true;
             }
         }
 
         // 반복문 순환을 모두 통과하였을 경우
+        // bool 값 반환_false
         return false;
     }
 
-    #endregion
 
-    #region     Canvas 전환 관련 메서드 모음
-
+    /// <summary>
+    /// Canvas 전환 관련 메서드
+    /// </summary>
+    
     // 메서드 - Canvas 창 전환
     public void SwitchCanvas(GameObject go)
     {
+        if (thisGO == null)
+        {
+            Debug.Log("thisGO null 상태, 초기화 실행");
+            thisGO = gameObject;
+        }
+
         // 메서드 호출 - 부모 Object 제외 모두 닫기
         OffSetActiveInChild(thisGO.gameObject);
 
         // Object(= Canvas) 활성화_매개 변수
         go.SetActive(true);
+
+        // 조건문 - 매개 변수로 지정된 Object가 'canvasSelectStage'일 경우
+        if (go == canvasSelectStage)
+        {
+            // 선택 중인 Scene 값 갱신_빈 값     <<- Scene 선택을 누르지 않아도 게임 시작 버튼이 눌리지 않도록 의도했습니다.
+            selectedScene = "";
+                // ㄴ 이것도 Magic String 일까요?..
+        }
     }
+   
 
-    #endregion
-
-    #region     팝업 On/Off 관련 메서드 모음
-
+    /// <summary>
+    /// 팝업 On/Off 관련 메서드 모음
+    /// </summary>
+    
     // 메서드 - Option 팝업 활성화
     public void OnCanvasOptions(int i)
     {
-        // Singleton_GameManager 참조   <- 필요한 곳에서 직접 참조하라는 피드백 반영 ("Awake, Start 에서 참조하는 것은 불안정하다")
+        // Singleton_GameManager 참조           <<- 필요한 곳에서 직접 참조하라는 피드백 반영 ("Awake, Start 에서 참조하는 것은 불안정하다")
         gameManager = GameManager.Instance;
+
+        Debug.Log(gameManager);
 
         // Singleton 메서드 호출 - Unity 시간 정지
         gameManager.StopTime();
@@ -188,15 +205,15 @@ public class UIManager : MonoBehaviour
         // 조건문 - 조건에 따라 함수 실행_매개 변수
         switch (i)
         {
-            // 조건이 0일 경우
-            case 0:
-                // 조건에 대응하는 Object 활성화
-                optionCase[0].SetActive(true);
-                break;
             // 조건이 1일 경우
             case 1:
                 // 조건에 대응하는 Object 활성화
-                optionCase[1].SetActive(true);
+                optionCase1.SetActive(true);
+                break;
+            // 조건이 2일 경우
+            case 2:
+                // 조건에 대응하는 Object 활성화
+                optionCase2.SetActive(true);
                 break;
         }
     }
@@ -204,12 +221,12 @@ public class UIManager : MonoBehaviour
     // 메서드 - Option 팝업 비활성화
     public void OffCanvasOptions()
     {
-        // Singleton_GameManager 참조   <- 필요한 곳에서 직접 참조하라는 피드백 반영 ("Awake, Start 에서 참조하는 것은 불안정하다")
+        // Singleton_GameManager 참조         <<- 필요한 곳에서 직접 참조하라는 피드백 반영 ("Awake, Start 에서 참조하는 것은 불안정하다")
         gameManager = GameManager.Instance;
 
         // Option 팝업 내 모든 대응 Object 비활성화
-        optionCase[0].SetActive(false);
-        optionCase[1].SetActive(false);
+        optionCase1.SetActive(false);
+        optionCase2.SetActive(false);
 
         // Option 팝업 비활성화
         canvasOptions.SetActive(false);
@@ -218,49 +235,114 @@ public class UIManager : MonoBehaviour
         gameManager.ResumeTime();
     }
 
-    #endregion
 
-    #region     Scene Load/Unload 관련 메서드 모음
-
-    // 메서드 - Scene Load (Async 활용)
-    public void LoadSceneAdditive(string sceneName)
+    /// <summary>
+    /// Scene 선택 관련 메서드
+    /// </summary>
+    
+    // 메서드 - 선택 중인 Scene 값 갱신
+    public void SelectScene(string selectScene)
     {
-        // 조건문 - 매개 변수와 동일한 이름을 가진 Scene이 이미 Load되어 있을 경우
-        if (IsSceneLoaded(sceneName))
-        {
-            // Load되어 있는 Scene 제거
-            UnloadScene(sceneName);
-        }
+        // 선택 중인 Scene 값 갱신_매개 변수
+        selectedScene = selectScene;
 
-        // Scene Load_매개 변수
-        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        Debug.Log($"Stage 선택: {selectedScene}");
     }
 
-    // 메서드 - Scene Unload (Async 활용)
-    public void UnloadScene(string sceneName)
+
+    /// <summary>
+    /// Scene Load/Unload 관련 메서드 모음    <<- GameManager로 이전해야 할까?
+    /// </summary>
+
+    // 메서드 - Scene Load (Async 활용)
+    public void LoadScene()
     {
-        // 조건문 - 매개 변수와 동일한 이름을 가진 Scene이 이미 Load되어 있지 않을 경우
-        if (!IsSceneLoaded(sceneName))
+        // Scene Load_선택 중인 Scene 값
+        SceneManager.LoadSceneAsync(selectedScene, LoadSceneMode.Single);
+    }
+    
+    // 메서드 - Scene Load_Additive (Async 활용)
+    public void LoadSceneAdditive()
+    {
+        // 선택 중인 Scene이 없을 경우
+        if (selectedScene == "")
         {
-            Debug.Log($"'{sceneName}' 은(는) 현재 로드되어 있지 않음");
+            // LogWarning 출력
+            Debug.LogWarning("Scene가 선택되지 않음");
+            // 메서드 종료
             return;
         }
 
-        // Scene Unload_매개 변수
-        SceneManager.UnloadSceneAsync(sceneName);
+        // 조건문 - 선택 중인 Scene과 동일한 이름을 가진 Scene이 이미 Load되어 있을 경우
+        if (IsSceneLoaded())
+        {
+            // Load되어 있는 Scene 제거
+            UnloadScene();
+        }
+
+        // Scene Load_선택 중인 Scene 값, 현재 Scene을 유지한 채 아래에 Load
+        SceneManager.LoadSceneAsync(selectedScene, LoadSceneMode.Additive);
     }
 
-    // 메서드 - Scene Load_현재 실행중인 Scene과 동일한 Scene
-    public void RestartScene(string sceneName)
+    // 메서드 - Scene Unload (Async 활용)
+    public void UnloadScene()
     {
-        // 메서드 호출 - Scene Unload_매개 변수
-        UnloadScene(sceneName);
+        // 조건문 - 선택 중인 Scene과 동일한 이름을 가진 Scene이 Load되어 있지 않을 경우
+        if (!IsSceneLoaded())
+        {
+            Debug.Log($"'{selectedScene}' 은(는) 현재 로드되어 있지 않음");
+            return;
+        }
 
-        // 메서드 호출 - Scene Load_매개 변수
-        LoadSceneAdditive(sceneName);
+        // Scene Unload_선택 중인 Scene
+        SceneManager.UnloadSceneAsync(selectedScene);
     }
 
-    #endregion
+    // 메서드 - Scene Reload_현재 실행중인 Scene
+    public void ReloadScene()
+    {
+        // 메서드 호출 - Scene Unload
+        UnloadScene();
+
+        // 메서드 호출 - Scene Load_Additive
+        LoadSceneAdditive();
+
+        // 메서드 호출 - 현재 실행중인 Scene Reload        <<- Unity 입문 강의 내 코드 응용
+        // SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+    }
+
+
+    /// <summary>
+    /// GameResult 관련 메서드 모음
+    /// </summary>
+
+    // 메서드 - Game Result 판별 후 UI 활성화 (GameManager 연동 대기)
+    public void OnGameReusltUI()
+    {
+        // 임시 변수_게임 상태를 판별할 bool 값    <<- GameManager에서 값 받아오기
+        bool gameState = false;
+
+        // 게임에서 승리했을 경우
+        if (gameState)
+        {
+            // GameClear 호출
+            gameClear.SetActive(true);
+        }
+        // 게임에서 패배했을 경우
+        else if(gameState)
+        {
+            // GameOver 호출
+            gameOver.SetActive(true);
+        }
+    }
+
+    // 메서드 - Game Result UI 비활성화
+    public void OffGameResultUI()
+    {
+        gameClear.SetActive(false);
+        gameOver.SetActive(false);
+    }
+
 
     #endregion
 }

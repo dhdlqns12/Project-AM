@@ -115,24 +115,12 @@ public class EnemySpawner : MonoBehaviour
 
         if (currentSpawnerData.WarriorCount > 0)
         {
-            SpawnLineFormation(
-                Enums.UnitType.Warrior,
-                basePos,
-                frontLineOffset,  // X 오프셋 (적 방향)
-                currentSpawnerData.WarriorCount,
-                currentSpawnerData.UnitLevel
-            );
+            SpawnLineFormation(Enums.UnitType.Warrior, basePos, frontLineOffset, currentSpawnerData.WarriorCount, currentSpawnerData.UnitLevel);
         }
 
         if (currentSpawnerData.ArcherCount > 0)
         {
-            SpawnLineFormation(
-                Enums.UnitType.Archer,
-                basePos,
-                backLineOffset,  // X 오프셋 (뒤쪽)
-                currentSpawnerData.ArcherCount,
-                currentSpawnerData.UnitLevel
-            );
+            SpawnLineFormation(Enums.UnitType.Archer, basePos, backLineOffset, currentSpawnerData.ArcherCount, currentSpawnerData.UnitLevel);
         }
     }
 
@@ -142,27 +130,16 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnLineFormation(Enums.UnitType unitType, Vector3 basePos, float xOffset, int count, int level)
     {
         // Y축 중앙 정렬을 위한 시작 위치 계산
-        float totalWidth = (count - 1) * unitSpacing;
-        float startY = -totalWidth / 2f;
+        float totalHeight = (count - 1) * unitSpacing;
+        float startY = -totalHeight / 2f;
 
         for (int i = 0; i < count; i++)
         {
             // 배치 위치 계산
-            Vector3 spawnPos = new Vector3(
-                basePos.x + xOffset,           // X: 앞줄/뒷줄
-                basePos.y + startY + (i * unitSpacing),  // Y: 일렬 배치
-                basePos.z
-            );
+            Vector3 spawnPos = new Vector3(basePos.x + xOffset, basePos.y + startY + (i * unitSpacing), basePos.z);
 
             // 유닛 생성 (즉시, 한 마리씩)
-            unitSpawner.SpawnUnits(
-                unitType,
-                spawnPos,
-                Team.Enemy,
-                level,
-                1,   // 한 마리
-                0f   // 즉시 생성
-            );
+            unitSpawner.SpawnUnits(unitType, spawnPos, Team.Enemy, level, 1, 0f);
         }
 
         string typeName = unitType == Enums.UnitType.Warrior ? "전사" : "궁수";
