@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _02_Scripts.Building.Grid
@@ -6,7 +7,9 @@ namespace _02_Scripts.Building.Grid
     {
         [SerializeField] private GameObject gridSlotContainer;
         [SerializeField] private GameObject gridSlotPrefab;
-        [SerializeField] private int gridSlotAmount = 25;
+        [SerializeField] private int gridSlotAmount = 5;
+
+        private Dictionary<Vector2Int, GridCell> gridCells = new Dictionary<Vector2Int, GridCell>();
 
         void Awake()
         {
@@ -17,7 +20,15 @@ namespace _02_Scripts.Building.Grid
         {
             for (int i = 0; i < gridSlotAmount; i++)
             {
-                GameObject slot = Instantiate(gridSlotPrefab, gridSlotContainer.transform);
+                for (int j = 0; j < gridSlotAmount; j++)
+                {
+                    GameObject slot = Instantiate(gridSlotPrefab, gridSlotContainer.transform);
+                    GridCell cell = slot.GetComponentInChildren<GridCell>();
+                    Vector2Int vector2Int = new Vector2Int(i, j);
+                    cell.SetCoordinates(vector2Int);
+                    gridCells[vector2Int] = cell;
+                }
+
             }
         }
     }

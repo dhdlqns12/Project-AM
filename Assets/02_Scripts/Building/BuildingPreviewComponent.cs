@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using _02_Scripts.Building.Grid;
 using Inventory;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utils;
 
@@ -18,13 +21,21 @@ namespace _02_Scripts.Building
         [SerializeField] private GameObject gridSlotPrefab;
         [SerializeField] private int gridSlotAmount = 5;
 
+        [SerializeField] private GraphicRaycaster targetGridRaycaster;
+        [SerializeField] private EventSystem eventSystem;
+
+        [SerializeField] private Color ok = new Color(0, 1, 0, 0.5f);
+        [SerializeField] private Color notOk = new Color(1, 0, 0, 0.3f);
+
         public MouseState CurrentMouseState { get; set; }
         private BuildingEntity buildingEntity;
-        // private RectTransform previewTransform;
         private Dictionary<Vector2Int, GameObject> gridSlots = new Dictionary<Vector2Int, GameObject>();
+        private Dictionary<Vector2Int, GameObject> occupied = new Dictionary<Vector2Int, GameObject>();
+
+
+
         void Awake()
         {
-            // previewTransform = GetComponent<RectTransform>();
             Init();
         }
 
@@ -43,6 +54,11 @@ namespace _02_Scripts.Building
 
             SelectCancel();
             InventoryEvents.OnBuildingSelected += SetPreview;
+
+            if (targetGridRaycaster != null)
+            {
+                Debug.Log($"Target grid raycaster: {targetGridRaycaster.name}");
+            }
         }
 
         void Update()
@@ -64,6 +80,54 @@ namespace _02_Scripts.Building
                 buildingCanvas.worldCamera,
                 out Vector2 localPoint);
             gridContainerWrapper.anchoredPosition = localPoint;
+            CheckCanBuild();
+        }
+
+        private void CheckCanBuild()
+        {
+            if (buildingEntity == null) return;
+            bool canBuild = false;
+            foreach (var slot in occupied)
+            {
+                GameObject previewSlot = slot.Value;
+                GridCell targetSlot = ShootRayFromSlot(previewSlot);
+                if (targetSlot != null)
+                {
+                    if (targetSlot.Occupied)
+                    {
+                        previewSlot.GetComponentInChildren<Image>().color = notOk;
+                    }
+                    else
+                    {
+                        previewSlot.GetComponentInChildren<Image>().color = ok;
+                    }
+                }
+                else
+                {
+                    previewSlot.GetComponentInChildren<Image>().color = ok;
+                }
+            }
+
+        }
+
+        private GridCell ShootRayFromSlot(GameObject slot)
+        {
+            PointerEventData pointerData = new PointerEventData(eventSystem);
+            pointerData.position = RectTransformUtility.WorldToScreenPoint(buildingCanvas.worldCamera, slot.transform.position);
+            List<RaycastResult> results = new List<RaycastResult>();
+            targetGridRaycaster.Raycast(pointerData, results);
+            if (results.Count > 0)
+            {
+                foreach (var result in results)
+                {
+                    GridCell cell = result.gameObject.GetComponent<GridCell>();
+                    if (cell != null)
+                    {
+                        return cell;
+                    }
+                }
+            }
+            return null;
         }
 
         private void SelectCancel()
@@ -75,6 +139,7 @@ namespace _02_Scripts.Building
 
         public void SetPreview(BuildingEntity building)
         {
+            occupied.Clear();
             buildingEntity = building;
             CurrentMouseState = MouseState.Selected;
             gridSlotContainer.SetActive(true);
@@ -89,7 +154,8 @@ namespace _02_Scripts.Building
             {
                 if (gridSlots.ContainsKey(vector))
                 {
-                    gridSlots[vector].GetComponentInChildren<Image>().color = new Color(0, 1, 0, 0.5f);
+                    gridSlots[vector].GetComponentInChildren<Image>().color = ok;
+                    occupied.Add(vector, gridSlots[vector]);
                 }
             }
         }
