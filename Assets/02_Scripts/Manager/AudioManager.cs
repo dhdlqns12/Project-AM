@@ -51,6 +51,8 @@ public class AudioManager : Singleton<AudioManager>
         };
     }
 
+    #region 볼륨 제어
+
     public void SetVolume(AudioMixerGroupName key, float volume)
     {
         var sKey = key.ToString();
@@ -79,6 +81,10 @@ public class AudioManager : Singleton<AudioManager>
             return 0f;
         }
     }
+    
+    #endregion
+
+    #region 배경음 재생
 
     public void PlayTitleBGM() => PlayBGM(titleBGM);
 
@@ -94,6 +100,10 @@ public class AudioManager : Singleton<AudioManager>
         bgmAudioSource.loop = true;
         bgmAudioSource.Play();
     }
+    
+    #endregion
+
+    #region 효과음 재생
 
     public void PlayClickSFX() => interfaceAudioSource.PlayOneShot(clickSFX);
 
@@ -125,5 +135,7 @@ public class AudioManager : Singleton<AudioManager>
         
         Debug.Log($"{key} 효과음 재생");
     }
+
+    #endregion
 
 }
