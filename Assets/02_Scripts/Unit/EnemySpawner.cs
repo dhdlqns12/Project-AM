@@ -142,8 +142,8 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnLineFormation(Enums.UnitType unitType, Vector3 basePos, float xOffset, int count, int level)
     {
         // Y축 중앙 정렬을 위한 시작 위치 계산
-        float totalWidth = (count - 1) * unitSpacing;
-        float startY = -totalWidth / 2f;
+        float totalHeight = (count - 1) * unitSpacing;
+        float startY = -totalHeight / 2f;
 
         for (int i = 0; i < count; i++)
         {
