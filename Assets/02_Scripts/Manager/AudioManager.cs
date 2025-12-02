@@ -202,7 +202,9 @@ public class AudioManager : MonoBehaviour
     #endregion
 
     #region 효과음 재생
-
+/// <summary>
+/// 각종효과음 발동 매서드입니다.
+/// </summary>
     public void PlayClickSFX() => PlaySFX("Click", interfaceAudioSource, 0f);
 
     public void WarriorAttackSFX() => PlaySFX("warrior_swing", sfxAudioSource, coolDownTime);
