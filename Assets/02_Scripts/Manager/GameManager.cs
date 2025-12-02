@@ -59,6 +59,16 @@ public class GameManager :Singleton<GameManager>
          * 상대 유닛, 건물 초기화
          */
     }
-    
-    
+
+    // 시간 정지
+    public void StopTime()
+    {
+        Time.timeScale = 0f;
+    }
+
+    // 시간 재개
+    public void ResumeTime()
+    {
+        Time.timeScale = 1f;
+    }
 }
