@@ -32,7 +32,7 @@ namespace Inventory
                     gachaPool.Add(new BuildingEntity(data[i]));
                 }
             }
-            StageManager.Instance.IncreaseGold(GACHA_COST * 10);
+            StageManager.Instance.IncreaseGold(GACHA_COST * 100);
         }
 
         public void OnClickGachaBuilding()
