@@ -32,6 +32,8 @@ public abstract class UnitBase : MonoBehaviour
         Debug.Log($"{data.Name} 초기화 (Team: {Team}, Type: {data.Type}, Lv.{data.Level})");
 
         OnInitialized();
+
+        SetColorByLevel();
     }
 
     /// <summary>
@@ -91,5 +93,59 @@ public abstract class UnitBase : MonoBehaviour
     {
         if (other == null) return false;
         return this.Team == other.Team;
+    }
+
+    /// <summary>
+    /// 레벨에 따라 색상 설정 (기획서 기준)
+    /// </summary>
+    private void SetColorByLevel()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null) return;
+
+        if (Team == Team.Enemy)
+        {
+            // 적 유닛
+            if (Data.Type == Enums.UnitType.Warrior)
+            {
+                switch (Data.Level)
+                {
+                    case 1: spriteRenderer.color = new Color(0.8235295f, 0.8235295f, 0.8235295f); break;  
+                    case 2: spriteRenderer.color = new Color(0.2509804f, 0.2509804f, 0.2509804f); break;  
+                    case 3: spriteRenderer.color = new Color(0.0509804f, 0.0509804f, 0.0509804f); break; 
+                }
+            }
+            else if (Data.Type == Enums.UnitType.Archer)
+            {
+                switch (Data.Level)
+                {
+                    case 1: spriteRenderer.color = new Color(0.9490197f, 0.8156863f, 0.9294118f); break; 
+                    case 2: spriteRenderer.color = new Color(0.8470589f, 0.4313726f, 0.8039216f); break;    
+                    case 3: spriteRenderer.color = new Color(0.4705883f, 0.1254902f, 0.4313726f); break; 
+                }
+            }
+        }
+        else
+        {
+            // 아군 유닛
+            if (Data.Type == Enums.UnitType.Warrior)
+            {
+                switch (Data.Level)
+                {
+                    case 1: spriteRenderer.color = new Color(0.9803922f, 0.8901961f, 0.8431373f); break;     
+                    case 2: spriteRenderer.color = new Color(0.9490197f, 0.6666667f, 0.5215687f); break;     
+                    case 3: spriteRenderer.color = new Color(0.7529413f, 0.3098039f, 0.08235294f); break;  
+                }
+            }
+            else if (Data.Type == Enums.UnitType.Archer)
+            {
+                switch (Data.Level)
+                {
+                    case 1: spriteRenderer.color = new Color(0.854902f, 0.9450981f, 0.8156863f); break;  
+                    case 2: spriteRenderer.color = new Color(0.5529412f, 0.8509805f, 0.4470589f); break;  
+                    case 3: spriteRenderer.color = new Color(0.2352941f, 0.4901961f, 0.1372549f); break;  
+                }
+            }
+        }
     }
 }

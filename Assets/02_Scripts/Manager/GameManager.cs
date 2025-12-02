@@ -12,6 +12,7 @@ public class GameManager :Singleton<GameManager>
         ResourceManager.Init();
         CreateStageManager();
         CreateUnitDataManager();
+        CreateEnemySpawnerManager();
     }
 
     private bool isDead;
@@ -32,6 +33,12 @@ public class GameManager :Singleton<GameManager>
     {
         GameObject unitDataManagerObj = new GameObject("UnitDataManager");
         unitDataManagerObj.AddComponent<UnitDataManager>();
+    }
+
+    private void CreateEnemySpawnerManager()
+    {
+        GameObject EnemySpawnManagerObj = new GameObject("EnemySpawnerDataManager");
+        EnemySpawnManagerObj.AddComponent<EnemySpawnerDataManager>();
     }
     
     public void GameStart()

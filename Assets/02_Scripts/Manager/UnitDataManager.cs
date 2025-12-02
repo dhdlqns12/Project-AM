@@ -7,10 +7,11 @@ public class UnitDataManager : Singleton<UnitDataManager>
 
     protected override void Init()
     {
-        LoadUnitData();
+        LoadPlayerUnitData();
+        LoadEnemyUnitData();
     }
 
-    private void LoadUnitData()
+    private void LoadPlayerUnitData()
     {
         unitDataDictionary.Clear();
 
@@ -28,8 +29,28 @@ public class UnitDataManager : Singleton<UnitDataManager>
             unitDataDictionary.Add(data.Index, data);
         }
 
-        Debug.Log($"유닛 데이터: {unitDataDictionary.Count}개");
+        Debug.Log($"플레이어 유닛: {unitDataDictionary.Count}개");
     }
+
+    private void LoadEnemyUnitData()
+    {
+        UnitDataJson[] jsonArray = ResourceManager.LoadJsonDataList<UnitDataJson>("EnemyData");
+
+        if (jsonArray == null || jsonArray.Length == 0)
+        {
+            Debug.LogError("EnemyUnitData 로드 실패!");
+            return;
+        }
+
+        foreach (var json in jsonArray)
+        {
+            UnitData data = new UnitData(json);
+            unitDataDictionary.Add(data.Index, data);
+        }
+
+        Debug.Log($"적 유닛: {jsonArray.Length}개");
+    }
+
 
     /// <summary>
     /// Index로 유닛 데이터 가져오기

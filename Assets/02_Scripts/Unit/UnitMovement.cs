@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class UnitMovement : MonoBehaviour
 {
@@ -8,7 +6,12 @@ public class UnitMovement : MonoBehaviour
     private bool isMoving = true;
     private float moveDirection;  // 1: 오른쪽, -1: 왼쪽
 
-    public bool IsMoving => isMoving;
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     public void Init(UnitBase unitBase)
     {
@@ -20,12 +23,21 @@ public class UnitMovement : MonoBehaviour
         Debug.Log($"{unit.Data.Name} 이동 시작 (방향: {(moveDirection > 0 ? "->" : "<-")})");
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (!isMoving || unit == null || unit.IsDead) return;
+        if (unit == null || unit.IsDead)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
 
-        // 자동 이동
-        transform.position += Vector3.right * moveDirection * unit.Data.MoveSpeed * Time.deltaTime;
+        if (!isMoving)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        rb.velocity = Vector2.right * moveDirection * unit.Data.MoveSpeed;
     }
 
     /// <summary>
@@ -34,6 +46,12 @@ public class UnitMovement : MonoBehaviour
     public void Stop()
     {
         isMoving = false;
+
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
     }
 
     /// <summary>
@@ -44,6 +62,11 @@ public class UnitMovement : MonoBehaviour
         if (unit != null && !unit.IsDead)
         {
             isMoving = true;
+
+            if (rb != null)
+            {
+                rb.bodyType = RigidbodyType2D.Dynamic;
+            }
         }
     }
 }

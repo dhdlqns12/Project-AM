@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 428617376}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.47916672, y: 0, z: 0}
+  m_LocalPosition: {x: 0.45, y: 0, z: 0}
   m_LocalScale: {x: 0.02777778, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -216,8 +216,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 518569510}
+  - component: {fileID: 518569511}
   m_Layer: 0
-  m_Name: SapwnPoint
+  m_Name: EnemySapwnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,6 +239,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 428617378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &518569511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 518569509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f325740a9013281408171afe3806c85d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitSpawner: {fileID: 1473068715}
+  enemySpawnPoint: {fileID: 518569510}
+  autoStart: 1
 --- !u!1 &537960875
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,9 +553,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerUnitPrefab: {fileID: 2818207951990114346, guid: 3c39401b26765c74ebacb5a8f3781bb8, type: 3}
   enemyUnitPrefab: {fileID: 8040851609330430919, guid: 248766fa3044ea74fbdadab7142699f7, type: 3}
+  unitPool: {fileID: 1644824328}
   playerSpawnPoint: {fileID: 1683697947}
   enemySpawnPoint: {fileID: 518569510}
   spawnInterval: 0.8
+--- !u!1 &1644824328
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1644824329}
+  m_Layer: 0
+  m_Name: UnitPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1644824329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644824328}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 26.76303, y: 1.737984, z: -0.20043342}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1683697946
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,7 +598,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1683697947}
   m_Layer: 0
-  m_Name: SapwnPoint
+  m_Name: PlayerSapwnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -694,7 +742,7 @@ Transform:
   m_GameObject: {fileID: 2030532019}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.47916672, y: 0, z: 0}
+  m_LocalPosition: {x: -0.45, y: 0, z: 0}
   m_LocalScale: {x: 0.02777778, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -709,3 +757,4 @@ SceneRoots:
   - {fileID: 1340761204}
   - {fileID: 1473068713}
   - {fileID: 1838941365}
+  - {fileID: 1644824329}
