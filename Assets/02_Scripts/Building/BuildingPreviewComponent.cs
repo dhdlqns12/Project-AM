@@ -73,6 +73,7 @@ namespace _02_Scripts.Building
             {
                 if (!canBuild) return;
                 OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
+                SelectCancel();
             }
 
 

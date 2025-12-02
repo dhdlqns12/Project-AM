@@ -18,6 +18,7 @@ namespace _02_Scripts.Building
         public float? GoldProductionAmount;
         public float? UnitStatMultiplier;
         public int? MergeResult;
+        public int InventoryIndex;
 
         public BuildingEntity(BuildingData buildingData)
         {

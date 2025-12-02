@@ -20,6 +20,7 @@ namespace Inventory
         private GachaBuilding gachaBuilding;
 
         private int lastInventorySlotIndex = -1;
+        private bool isAdding;
 
 
         void Awake()
@@ -45,14 +46,35 @@ namespace Inventory
                 gachaBuilding = gachaButtonComponent.GetComponent<GachaBuilding>();
                 gachaBuilding.OnGetBuilding += AddBuilding;
             }
+            BuildingEvents.OnBuildingConstructed += RemoveBuilding;
         }
 
         public void AddBuilding(BuildingEntity buildingEntity)
         {
+            if (isAdding) return;
+            isAdding = true;
             if (lastInventorySlotIndex >= inventorySlotAmount - 1 ) return;
             inventorySlots[lastInventorySlotIndex + 1].SetBuildingEntity(buildingEntity);
             lastInventorySlotIndex++;
+            buildingEntity.InventoryIndex = lastInventorySlotIndex;
             buildingData.Add(buildingEntity);
+            UpdateInventoryUI();
+            isAdding = false;
+        }
+
+        private void RemoveBuilding(BuildingEntity buildingEntity)
+        {
+            if (lastInventorySlotIndex < 0) return;
+            for (int i = 0; i <= buildingData.Count; i++)
+            {
+                var building = buildingData[i];
+                if (building.InventoryIndex == buildingEntity.InventoryIndex)
+                {
+                    buildingData.RemoveAt(i);
+                    break;
+                }
+            }
+            lastInventorySlotIndex--;
             UpdateInventoryUI();
         }
 
@@ -74,6 +96,7 @@ namespace Inventory
         void OnDestroy()
         {
             gachaBuilding.OnGetBuilding -= AddBuilding;
+            BuildingEvents.OnBuildingConstructed -= RemoveBuilding;
         }
 
     }
