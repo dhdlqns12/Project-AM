@@ -9,13 +9,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6652373082040643882}
+  - component: {fileID: 5035082585323412189}
+  - component: {fileID: 676189575390538868}
   m_Layer: 5
   m_Name: ControlPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6652373082040643882
 RectTransform:
   m_ObjectHideFlags: 0
@@ -38,6 +40,26 @@ RectTransform:
   m_AnchoredPosition: {x: 125, y: 0}
   m_SizeDelta: {x: 1600, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5035082585323412189
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496285879946732219}
+  m_CullTransparentMesh: 1
+--- !u!225 &676189575390538868
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496285879946732219}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &612400122191779694
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,7 +237,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 9999
+  m_SortingOrder: 51
   m_TargetDisplay: 0
 --- !u!114 &5640995170255218592
 MonoBehaviour:
@@ -448,6 +470,7 @@ MonoBehaviour:
   inventorySlotPrefab: {fileID: 2136384602553987405, guid: 370d6d396dbba4f49be5deb13485d640, type: 3}
   inventorySlotAmount: 16
   gachaButtonComponent: {fileID: 3128009103393454936}
+  IsOn: 0
 --- !u!223 &5881569623654863961
 Canvas:
   m_ObjectHideFlags: 0

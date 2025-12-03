@@ -45,6 +45,9 @@ namespace _02_Scripts.Building
 
         public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
 
+        private InventoryComponent inventoryComponent;
+
+
 
 
 
@@ -76,10 +79,12 @@ namespace _02_Scripts.Building
                 buildingPools.Add(new BuildingEntity(data[i]));
             }
             eventSystem = FindObjectOfType<EventSystem>();
+            inventoryComponent = buildingCanvas.GetComponentInChildren<InventoryComponent>();
         }
 
         void Update()
         {
+            if (!inventoryComponent.IsOn) return;
             SetPreviewTransform();
             CheckRetrieve();
             if (Input.GetMouseButtonDown(1))
@@ -132,6 +137,7 @@ namespace _02_Scripts.Building
         {
             if (CurrentMouseState == MouseState.NonSelected) return;
             if (!gameObject.activeInHierarchy) return;
+            if(!inventoryComponent.IsOn) return;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 buildingCanvas.transform as RectTransform,
                 Input.mousePosition,
@@ -283,6 +289,7 @@ namespace _02_Scripts.Building
 
         public void SetPreview(BuildingEntity building)
         {
+            if (!inventoryComponent.IsOn) return;
             occupied.Clear();
             buildingEntity = building;
             CurrentMouseState = MouseState.Selected;

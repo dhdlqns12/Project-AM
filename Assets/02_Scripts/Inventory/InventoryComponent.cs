@@ -19,6 +19,7 @@ namespace Inventory
 
         private GachaBuilding gachaBuilding;
         private bool isAdding;
+        public bool IsOn;
 
         void Awake()
         {
@@ -27,7 +28,19 @@ namespace Inventory
 
         public void ToggleInventory(bool toggle)
         {
-            controlPanel.SetActive(toggle);
+            var canvasGroup = controlPanel.GetComponent<CanvasGroup>();
+            var canvas = controlPanel.GetComponentInParent<Canvas>().GetComponent<Canvas>();
+            if (toggle)
+            {
+                canvasGroup.alpha = 1;
+                canvas.sortingOrder = 51;
+            }
+            else
+            {
+                canvasGroup.alpha = 0;
+                canvas.sortingOrder = 49;
+            }
+            IsOn = toggle;
         }
 
         void Init()
