@@ -182,8 +182,8 @@ MonoBehaviour:
   waveInterval: 30
   autoStart: 1
   sequentialSpawnInterval: 0.3
-  frontLineOffset: -0.5
-  backLineOffset: 1.5
+  frontLineOffset: 1.5
+  backLineOffset: -0.5
   unitSpacing: 0.8
 --- !u!1 &3780429400751042282
 GameObject:
