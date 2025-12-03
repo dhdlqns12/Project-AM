@@ -29,8 +29,8 @@ public class EnemyUnit : UnitBase
         Debug.Log($"{Data.Name} 사망!");
 
         movement?.Stop();
-        
 
+        StageManager.Instance.PlusKillCount();
         // TODO: 골드/아이템 드롭
     }
 }
