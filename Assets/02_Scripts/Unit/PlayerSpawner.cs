@@ -8,20 +8,29 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private UnitSpawner unitSpawner;
     [SerializeField] private Transform playerSpawnPoint;
 
-    [Header("생성 설정")]
-    [SerializeField] private bool useFormationSpawn = false;
+    [Header("웨이브 설정")]
+    [SerializeField] private float waveInterval = 30f;  // 웨이브 주기 (30초)
+    [SerializeField] private bool autoStart = true;
+    private float waveTimer = 0f;
+    private int waveCount = 0;
 
     [Header("순차 생성 설정")]
     [SerializeField] private float sequentialSpawnInterval = 0.3f;
 
     [Header("대형 배치 설정")]
-    [SerializeField] private float frontLineOffset = -0.5f;
-    [SerializeField] private float backLineOffset = 1.5f;
+    [SerializeField] private float frontLineOffset = 1.5f;
+    [SerializeField] private float backLineOffset = -0.5f;
     [SerializeField] private float unitSpacing = 0.8f;
 
+    private List<BuildingEntity> activeBuildings = new List<BuildingEntity>();
 
-    // 배치된 건물들과 생산 타이머 관리
-    private Dictionary<BuildingEntity, float> buildingTimers = new Dictionary<BuildingEntity, float>();
+    private void Start()
+    {
+        if (autoStart)
+        {
+            waveTimer = 0f;
+        }
+    }
 
     private void OnEnable()
     {
@@ -37,21 +46,48 @@ public class PlayerSpawner : MonoBehaviour
 
     private void Update()
     {
-        UpdateBuildingProduction();
+        waveTimer += Time.deltaTime;
+
+        // 테스트용 시간 스킵
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            waveTimer += waveInterval;
+        }
+
+        if (waveTimer >= waveInterval)
+        {
+            TriggerWave();
+            waveTimer = 0f;
+        }
+    }
+
+    private void TriggerWave()
+    {
+        waveCount++;
+
+        if (activeBuildings.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var building in activeBuildings)
+        {
+            if (building != null)
+            {
+                ProduceUnits(building);
+            }
+        }
     }
 
     /// <summary>
-    /// 건물 생성 시 - 타이머 등록
+    /// 건물 등록
     /// </summary>
     private void OnBuildingConstructed(List<BuildingEntity> buildings)
     {
         if (buildings == null || buildings.Count == 0)
         {
-            Debug.LogError("BuildingEntity 리스트가 비었습니다!");
             return;
         }
-
-        Debug.Log($"건물 생성 감지: {buildings.Count}개");
 
         foreach (var building in buildings)
         {
@@ -60,7 +96,7 @@ public class PlayerSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// 건물 등록 및 즉시 첫 유닛 생성
+    /// 건물 등록
     /// </summary>
     private void RegisterBuilding(BuildingEntity building)
     {
@@ -73,64 +109,30 @@ public class PlayerSpawner : MonoBehaviour
         // 유닛 생산 건물인지 확인
         if (!building.ProductionUnitType.HasValue)
         {
-            Debug.Log($"{building.BuildingName}: 유닛 생산 건물 아님");
             return;
         }
 
         if (!building.UnitPerCycle.HasValue || building.UnitPerCycle.Value <= 0)
         {
-            Debug.Log($"{building.BuildingName}: 생성할 유닛 개수 없음");
             return;
         }
 
-        if (!building.UnitProductionCycle.HasValue || building.UnitProductionCycle.Value <= 0)
+        if (!activeBuildings.Contains(building))
         {
-            Debug.Log($"{building.BuildingName}: 생산 주기 없음");
-            return;
-        }
-
-        if (!buildingTimers.ContainsKey(building))
-        {
-            buildingTimers[building] = 0f;  // 처음엔 0초 (즉시 생산)
-            Debug.Log($"건물 등록: {building.BuildingName} (Lv.{building.BuildingLevel}, 주기: {building.UnitProductionCycle}초)");
+            activeBuildings.Add(building);
         }
     }
 
     /// <summary>
-    /// 건물 파괴 시 - 타이머 제거
+    /// 건물 제거
     /// </summary>
     private void OnBuildingDestroyed(BuildingEntity building)
     {
         if (building == null) return;
 
-        if (buildingTimers.ContainsKey(building))
+        if (activeBuildings.Contains(building))
         {
-            buildingTimers.Remove(building);
-            Debug.Log($"건물 제거: {building.BuildingName}");
-        }
-    }
-
-    /// <summary>
-    /// 모든 건물의 생산 타이머 업데이트
-    /// </summary>
-    private void UpdateBuildingProduction()
-    {
-        // Dictionary를 순회하면서 타이머 업데이트
-        List<BuildingEntity> buildingsToUpdate = new List<BuildingEntity>(buildingTimers.Keys);
-
-        foreach (var building in buildingsToUpdate)
-        {
-            if (building == null || !building.UnitProductionCycle.HasValue) continue;
-
-            // 타이머 증가
-            buildingTimers[building] += Time.deltaTime;
-
-            // 생산 주기 도달 시 유닛 생성
-            if (buildingTimers[building] >= building.UnitProductionCycle.Value)
-            {
-                ProduceUnits(building);
-                buildingTimers[building] = 0f;  // 타이머 리셋
-            }
+            activeBuildings.Remove(building);
         }
     }
 
@@ -150,22 +152,9 @@ public class PlayerSpawner : MonoBehaviour
             ? playerSpawnPoint.position
             : Vector3.zero;
 
-        Debug.Log($"{building.BuildingName} 유닛 생산: {unitType} Lv.{buildingLevel} x{unitCount}");
-
-        if (useFormationSpawn)
-        {
-            SpawnUnitsFormation(unitType, spawnPosition, buildingLevel, unitCount);
-        }
-        else
-        {
-            SpawnUnitsSequential(unitType, spawnPosition, buildingLevel, unitCount);
-        }
+        SpawnUnitsFormation(unitType, spawnPosition, buildingLevel, unitCount);
     }
 
-
-    /// <summary>
-    /// 순차 생성
-    /// </summary>
     private void SpawnUnitsSequential(Enums.UnitType unitType, Vector3 position, int level, int count)
     {
         unitSpawner.SpawnUnits(
@@ -178,9 +167,7 @@ public class PlayerSpawner : MonoBehaviour
         );
     }
 
-    /// <summary>
-    /// 대형 배치
-    /// </summary>
+
     private void SpawnUnitsFormation(Enums.UnitType unitType, Vector3 position, int level, int count)
     {
         float totalWidth = (count - 1) * unitSpacing;
@@ -207,27 +194,41 @@ public class PlayerSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// 디버그용: 현재 등록된 건물 정보
+    /// 디버그 UI
     /// </summary>
     private void OnGUI()
     {
         if (!Application.isPlaying) return;
 
-        GUILayout.BeginArea(new Rect(10, 10, 300, 500));
-        GUILayout.Label($"생산 중인 건물: {buildingTimers.Count}개");
+        GUILayout.BeginArea(new Rect(10, 10, 350, 200));
 
-        foreach (var kvp in buildingTimers)
+        GUILayout.Label($"아군 웨이브 시스템");
+        GUILayout.Label($"다음 웨이브까지: {(waveInterval - waveTimer):F1}초");
+        GUILayout.Label($"웨이브 #{waveCount}");
+        GUILayout.Label($"배치된 건물: {activeBuildings.Count}개");
+
+        GUILayout.Space(10);
+
+        foreach (var building in activeBuildings)
         {
-            BuildingEntity building = kvp.Key;
-            float timer = kvp.Value;
-
-            if (building != null && building.UnitProductionCycle.HasValue)
+            if (building != null && building.UnitPerCycle.HasValue)
             {
-                float cycle = building.UnitProductionCycle.Value;
-                GUILayout.Label($"{building.BuildingName}: {timer:F1}/{cycle:F1}초");
+                GUILayout.Label($"{building.BuildingName} (웨이브당 {building.UnitPerCycle}마리)");
             }
         }
 
         GUILayout.EndArea();
     }
+
+    /// <summary>
+    /// 현재 웨이브 시간 정보
+    /// </summary>
+    public string GetWaveTimeString()
+    {
+        float remainingTime = waveInterval - waveTimer;
+        int minutes = Mathf.FloorToInt(remainingTime / 60f);
+        int seconds = Mathf.FloorToInt(remainingTime % 60f);
+        return $"{minutes:00}:{seconds:00}";
+    }
 }
+
