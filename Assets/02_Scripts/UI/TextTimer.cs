@@ -26,6 +26,6 @@ public class TextTimer : MonoBehaviour
 
     private void UpdateTimerUI()
     {
-        textTimer.text = gameManager.PlayTime.ToString("F2");       // F2: 소수점 2자리까지 반영
+        textTimer.text = gameManager.PlayTime.ToString("F1");       // F2: 소수점 2자리까지 반영
     }
 }
