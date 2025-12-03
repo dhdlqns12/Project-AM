@@ -177,7 +177,16 @@ public class UnitCombat : MonoBehaviour
         }
         else if (currentTargetNexus != null)
         {
-            return Vector3.Distance(transform.position, currentTargetNexus.transform.position);
+            Collider2D nexusCollider = currentTargetNexus.GetComponent<Collider2D>();
+            if (nexusCollider != null)
+            {
+                Vector3 closestPoint = nexusCollider.ClosestPoint(transform.position);
+                return Vector3.Distance(transform.position, closestPoint);
+            }
+            else
+            {
+                return Vector3.Distance(transform.position, currentTargetNexus.transform.position);
+            }
         }
         return float.MaxValue;
     }
@@ -210,6 +219,8 @@ public class UnitCombat : MonoBehaviour
             attackTimer = 0f;
             int damage = unit.CurAtk;
 
+            PlayAttackSound();
+
             if (currentTargetUnit != null)
             {
                 currentTargetUnit.TakeDamage(damage);
@@ -230,4 +241,27 @@ public class UnitCombat : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 유닛 타입에 따라 공격 효과음 재생
+    /// </summary>
+    private void PlayAttackSound()
+    {
+        if (unit == null) return;
+
+        switch (unit.Data.Type)
+        {
+            case Enums.UnitType.Warrior:
+                GameManager.Instance.AudioManager.WarriorAttackSFX();
+                break;
+
+            case Enums.UnitType.Archer:
+                GameManager.Instance.AudioManager.ArcherAtttackSFX();
+                break;
+
+            default:
+                break;
+        }
+    }
+
 }

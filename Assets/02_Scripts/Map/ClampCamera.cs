@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class ClampCamera : MonoBehaviour
 {
@@ -8,25 +9,32 @@ public class ClampCamera : MonoBehaviour
     [Header("카메라 설정")]
     [SerializeField] private Camera cam;
     [SerializeField] private float dragSpeed; // 드래그 민감도
-    [SerializeField] private float smoothTime; // 부드러운 이동 시간
+
+    [Header("부드러운 이동 설정")]
+    [SerializeField] private float smoothTime;  // 부드러운 이동 속도 (낮을수록 빠름)
+
+    [Header("더블 탭 설정")]
+    [SerializeField] private float doubleTapTime;  // 더블 탭 인식 시간
+    [SerializeField] private float centerMoveSpeed;  // 중앙 이동 속도
 
     private float minCameraX;
     private float maxCameraX;
     private Vector3 drag;
     private bool isDragging;
 
-    private Vector3 targetPos;
-    private Vector3 smoothVelocity;
+    private Vector3 targetPosition;
+    private Vector3 velocity = Vector3.zero;
 
-    // 더블 탭 체크
     private float lastTapTime = 0f;
-    private const float doubleTapDelay = 0.25f;
+    private bool isMovingToCenter = false;
 
     private void Reset()
     {
         mapWidth = 120;
         dragSpeed = 1f;
-        smoothTime = 0.2f;
+        smoothTime = 0.15f;
+        doubleTapTime = 0.3f;
+        centerMoveSpeed = 30f;
         cam = Camera.main;
     }
 
@@ -36,16 +44,24 @@ public class ClampCamera : MonoBehaviour
             cam = Camera.main;
 
         CalculateCameraBounds();
-        targetPos = transform.position;
+        targetPosition = transform.position;
     }
 
     private void LateUpdate()
     {
-        HandleDragInput();
         HandleDoubleTap();
 
-        // 카메라 부드럽게 이동
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref smoothVelocity, smoothTime);
+        if (!isMovingToCenter)
+        {
+            HandleDragInput();
+        }
+
+        transform.position = Vector3.SmoothDamp(
+            transform.position,
+            targetPosition,
+            ref velocity,
+            smoothTime
+        );
     }
 
     private void CalculateCameraBounds()
@@ -62,6 +78,24 @@ public class ClampCamera : MonoBehaviour
         Debug.Log($"Camera Bounds - Min: {minCameraX}, Max: {maxCameraX}");
     }
 
+    private void HandleDoubleTap()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            float timeSinceLastTap = Time.time - lastTapTime;
+
+            if (timeSinceLastTap <= doubleTapTime)
+            {
+                MoveToCenter();
+            }
+
+            lastTapTime = Time.time;
+        }
+    }
+
+    /// <summary>
+    /// 드래그 입력 처리
+    /// </summary>
     private void HandleDragInput()
     {
         if (Input.GetMouseButtonDown(0))
@@ -75,12 +109,13 @@ public class ClampCamera : MonoBehaviour
             Vector3 currentPos = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3 difference = drag - currentPos;
 
-            Vector3 newPos = transform.position + new Vector3(difference.x * dragSpeed, 0, 0);
-
+            // targetPosition 업데이트 (실제 이동은 SmoothDamp가 처리)
+            Vector3 newPos = targetPosition + new Vector3(difference.x * dragSpeed, 0, 0);
             newPos.x = Mathf.Clamp(newPos.x, minCameraX, maxCameraX);
+            newPos.y = 0;
+            newPos.z = -10;
 
-            transform.position = newPos;
-
+            targetPosition = newPos;
             drag = cam.ScreenToWorldPoint(Input.mousePosition);
         }
 
@@ -90,33 +125,46 @@ public class ClampCamera : MonoBehaviour
         }
     }
 
-    private void HandleDoubleTap()
+    /// <summary>
+    /// 중앙(0, 0)으로 부드럽게 이동
+    /// </summary>
+    private void MoveToCenter()
     {
-        bool tapped = false;
-
-#if UNITY_EDITOR || UNITY_STANDALONE
-        // PC: 마우스 더블클릭
-        tapped = Input.GetMouseButtonDown(0);
-#else
-        // 모바일: 터치 더블탭
-        if (Input.touchCount == 1 && Input.touches[0].phase == TouchPhase.Began)
-            tapped = true;
-#endif
-
-        if (!tapped) return;
-
-        if (Time.time - lastTapTime < doubleTapDelay)
-        {
-            //  더블탭 감지됨 (0,0)으로 스무스 이동
-            MoveCenterSmooth();
-        }
-
-        lastTapTime = Time.time;
+        StopAllCoroutines();
+        StartCoroutine(MoveToCenterCoroutine());
     }
 
-    private void MoveCenterSmooth()
+    private IEnumerator MoveToCenterCoroutine()
     {
-        float centerX = Mathf.Clamp(0, minCameraX, maxCameraX);
-        targetPos = new Vector3(centerX, 0, -10);
+        isMovingToCenter = true;
+        isDragging = false;
+
+        Vector3 centerPosition = new Vector3(0, 0, -10);
+
+        // 경계 체크
+        centerPosition.x = Mathf.Clamp(centerPosition.x, minCameraX, maxCameraX);
+
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        float distance = Vector3.Distance(startPosition, centerPosition);
+        float duration = distance / centerMoveSpeed;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            // EaseInOut으로 부드럽게
+            t = t * t * (3f - 2f * t);
+
+            targetPosition = Vector3.Lerp(startPosition, centerPosition, t);
+
+            yield return null;
+        }
+
+        targetPosition = centerPosition;
+        isMovingToCenter = false;
+
+        Debug.Log("중앙 이동 완료!");
     }
 }
