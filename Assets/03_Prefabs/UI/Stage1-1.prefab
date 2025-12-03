@@ -236,6 +236,7 @@ GameObject:
   - component: {fileID: 1174609907041822211}
   - component: {fileID: 5060471129322631082}
   - component: {fileID: 4880744586115798237}
+  - component: {fileID: 5777692020653561169}
   m_Layer: 5
   m_Name: TextTimer (TMP)
   m_TagString: Untagged
@@ -359,6 +360,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5777692020653561169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994514409647991457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ace7173aeaca95948880f9aa75da68d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2040111476048537960
 GameObject:
   m_ObjectHideFlags: 0

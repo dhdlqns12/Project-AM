@@ -1,31 +1,31 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
 
 public class TextMoney : MonoBehaviour
 {
     private StageManager stageManager;
 
-    private TextMeshProUGUI moneyText;
+    private TextMeshProUGUI textMoney;
 
     private void Awake()
     {
         stageManager = StageManager.Instance;
 
-        moneyText = GetComponent<TextMeshProUGUI>();
+        textMoney = GetComponent<TextMeshProUGUI>();
 
-        if (moneyText == null)
+        if (textMoney == null)
         {
-            Debug.Log("moneyText가 연동되지 않음");
+            Debug.LogWarning("Money Text가 연동되지 않음");
         }
     }
 
     void Update()
     {
-        UpdateMoney();
+        UpdateMoneyUI();
     }
 
-    private void UpdateMoney()
+    private void UpdateMoneyUI()
     {
-        moneyText.text = stageManager.Gold.ToString();
+        textMoney.text = stageManager.Gold.ToString();
     }
 }
