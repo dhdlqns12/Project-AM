@@ -5,7 +5,16 @@
     "Type": "Warrior",
     "State": "Attack",
     "Action": "Swing",
-    "File_Name": "warrior_swing",
+    "File_Name": "Warrior_Attack",
+    "Volume": 0.2
+  },
+  {
+    "Index": 1,
+    "Category": "Unit",
+    "Type": "Archer",
+    "State": "Attack",
+    "Action": "Swing",
+    "File_Name": "Archer_Attack",
     "Volume": 0.2
   }
 ]
