@@ -45,6 +45,9 @@ namespace _02_Scripts.Building
 
         public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
 
+        private InventoryComponent inventoryComponent;
+
+
 
 
 
@@ -76,10 +79,12 @@ namespace _02_Scripts.Building
                 buildingPools.Add(new BuildingEntity(data[i]));
             }
             eventSystem = FindObjectOfType<EventSystem>();
+            inventoryComponent = buildingCanvas.GetComponentInChildren<InventoryComponent>();
         }
 
         void Update()
         {
+            if (!inventoryComponent.IsOn) return;
             SetPreviewTransform();
             CheckRetrieve();
             if (Input.GetMouseButtonDown(1))
