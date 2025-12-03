@@ -207,14 +207,14 @@ public class AudioManager : MonoBehaviour
 /// </summary>
     public void PlayClickSFX() => PlaySFX("Click", interfaceAudioSource, 0f);
 
-    public void WarriorAttackSFX() => PlaySFX("warrior_swing", sfxAudioSource, coolDownTime);
+    public void WarriorAttackSFX() => PlaySFX("Warrior_Attack", sfxAudioSource, coolDownTime);
 
-    public void ArcherAtttackSFX() => PlaySFX("ArcherAtk", sfxAudioSource, coolDownTime);
+    public void ArcherAtttackSFX() => PlaySFX("Archer_Attack", sfxAudioSource, coolDownTime);
 
     public void DamageSFX() => PlaySFX("Damage", sfxAudioSource, coolDownTime);
     public void PlayDeathSFX() => PlaySFX("Death", sfxAudioSource, coolDownTime);
 
-    public void PlaySFX(string fileName, AudioSource audioSource, float coolDownTime)
+    private void PlaySFX(string fileName, AudioSource audioSource, float coolTime)
     {
         if (!sfxDataDict.TryGetValue(fileName, out var data))
         {
@@ -228,7 +228,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
         
-        PlaySFXWithLimit(fileName, audioSource, clip, coolDownTime,data.Volume);
+        PlaySFXWithLimit(fileName, audioSource, clip, coolTime,data.Volume);
         
     }
     
