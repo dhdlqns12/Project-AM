@@ -192,43 +192,5 @@ public class PlayerSpawner : MonoBehaviour
             );
         }
     }
-
-    /// <summary>
-    /// 디버그 UI
-    /// </summary>
-    private void OnGUI()
-    {
-        if (!Application.isPlaying) return;
-
-        GUILayout.BeginArea(new Rect(10, 10, 350, 200));
-
-        GUILayout.Label($"아군 웨이브 시스템");
-        GUILayout.Label($"다음 웨이브까지: {(waveInterval - waveTimer):F1}초");
-        GUILayout.Label($"웨이브 #{waveCount}");
-        GUILayout.Label($"배치된 건물: {activeBuildings.Count}개");
-
-        GUILayout.Space(10);
-
-        foreach (var building in activeBuildings)
-        {
-            if (building != null && building.UnitPerCycle.HasValue)
-            {
-                GUILayout.Label($"{building.BuildingName} (웨이브당 {building.UnitPerCycle}마리)");
-            }
-        }
-
-        GUILayout.EndArea();
-    }
-
-    /// <summary>
-    /// 현재 웨이브 시간 정보
-    /// </summary>
-    public string GetWaveTimeString()
-    {
-        float remainingTime = waveInterval - waveTimer;
-        int minutes = Mathf.FloorToInt(remainingTime / 60f);
-        int seconds = Mathf.FloorToInt(remainingTime % 60f);
-        return $"{minutes:00}:{seconds:00}";
-    }
 }
 
