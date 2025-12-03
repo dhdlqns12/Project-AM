@@ -108,15 +108,29 @@ public class GameManager :Singleton<GameManager>
          */
     }
 
-    // 시간 정지
-    public void StopTime()
+    /// <summary>
+    /// Unity 시간 배속 조정 메서드
+    /// 매개변수 내 값에 의거하여 시간 배속이 조정됩니다.
+    /// 0 => 시간 정지, 1 => 시간 정상화, x => x배속
+    /// </summary>
+    public void AdjustTime(float speed)
     {
-        Time.timeScale = 0f;
+        Time.timeScale = speed;
     }
 
-    // 시간 재개
-    public void ResumeTime()
+    /// <summary>
+    /// 게임 종료 메서드    feat. Chat GPT
+    /// </summary>
+    public void QuitGame()
     {
-        Time.timeScale = 1f;
+        Debug.Log("게임 종료 (Unity Test 환경)");
+
+#if UNITY_EDITOR        // && !UNITY_INCLUDE_TESTS
+        // 에디터에서 플레이 모드 종료
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // 빌드된 게임 종료
+        Application.Quit();
+#endif
     }
 }
