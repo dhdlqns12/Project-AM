@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class GameManager :Singleton<GameManager>
 {
     [SerializeField] private AudioManager audioManager;
-    
     public AudioManager AudioManager
     {
         get { return audioManager; }
@@ -84,11 +83,13 @@ public class GameManager :Singleton<GameManager>
         if (isEnemyDead)
         {
             Debug.Log("플레이어 승리");
+            UIManager.Instance.OnGameResultUI(true);
             //게임 정지 , 플레이어 승리 UI
         }
         else if (isPlayerDead)
         {
             Debug.Log("플레이어 패배");
+            UIManager.Instance.OnGameResultUI(false);
             //게임 정지 , 플레이어 패배 UI
         }
         else

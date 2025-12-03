@@ -21,17 +21,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource sfxAudioSource;
     [SerializeField] private AudioSource interfaceAudioSource;
 
-    // [Header("BGM Clips")] 
-    // [SerializeField] private AudioClip titleBGM;
-    // [SerializeField] private AudioClip inGameBGM;
-    //
-    // [Header("SFX Clips")]
-    // [SerializeField] private AudioClip clickSFX;
-    // [SerializeField] private AudioClip warriorAttackSFX;
-    // [SerializeField] private AudioClip archerAttackSFX;
-    // [SerializeField] private AudioClip damageSFX;
-    // [SerializeField] private AudioClip deathSFX;
-
     private Dictionary<AudioMixerGroupName, AudioMixerGroup> userAudios;
     
     private Dictionary<string, float> lastSFXPlaytime = new(); // 효과음 쿨타임 계산
@@ -175,29 +164,6 @@ public class AudioManager : MonoBehaviour
             return 0f;
         }
     }
-    
-    #endregion
-
-    #region 배경음 재생 개선 전
-    //
-    // public void PlayTitleBGM() => PlayBGM(titleBGM);
-    //
-    // public void PlayInGameBGM() => PlayBGM(inGameBGM);
-    //
-    // private void PlayBGM(AudioClip clip, float volume = 1.0f)
-    // {
-    //     if (clip == null)
-    //     {
-    //         Debug.Log("배경음 클립이 비어있습니다.");
-    //         return;
-    //     }
-    //     if(bgmAudioSource.clip == clip)  return;
-    //     
-    //     bgmAudioSource.clip = clip;
-    //     bgmAudioSource.volume = volume;
-    //     bgmAudioSource.loop = true;
-    //     bgmAudioSource.Play();
-    // }
     
     #endregion
 
