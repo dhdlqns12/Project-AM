@@ -100,11 +100,6 @@ public class EnemySpawner : MonoBehaviour
 
     /// <summary>
     /// 새로운 방식: 전사 먼저 전부 생성 -> 궁수 생성 (긴 간격)
-    /// </summary>
-    /// <summary>
-    /// 새로운 방식: 전사 앞줄, 궁수 뒷줄 대형 배치
-    /// </summary>
-    /// <summary>
     /// 새로운 방식: 전사 앞줄, 궁수 뒷줄 대형 배치
     /// </summary>
     private void SpawnWaveFormation()
