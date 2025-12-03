@@ -326,7 +326,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
 
     // 메서드 - Game Result 판별 후 UI 활성화 (GameManager 연동 대기)
-    public void OnGameReusltUI(bool gameState)
+    public void OnGameResultUI(bool gameState)
     {
         // 게임에서 승리했을 경우
         if (gameState)
@@ -335,7 +335,7 @@ public class UIManager : MonoBehaviour
             gameClear.SetActive(true);
         }
         // 게임에서 패배했을 경우
-        else if(gameState)
+        else if(!gameState)
         {
             // GameOver 호출
             gameOver.SetActive(true);

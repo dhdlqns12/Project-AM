@@ -40,6 +40,8 @@ namespace _02_Scripts.Building
         private List<BuildingEntity> buildingPools = new List<BuildingEntity>();
         private int[] mergeTargetInventoryIndexs = new int[2];
         private bool isRotating;
+        private bool canRetrieve;
+        private Vector2Int? retrieveGrid;
 
         public event Action<BuildingEntity, List<Vector2Int>> OnBuildingProgress;
 
@@ -79,6 +81,7 @@ namespace _02_Scripts.Building
         void Update()
         {
             SetPreviewTransform();
+            CheckRetrieve();
             if (Input.GetMouseButtonDown(1))
             {
                 SelectCancel();
@@ -89,14 +92,18 @@ namespace _02_Scripts.Building
                 {
                     OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
                     SelectCancel();
-                }else
-                if (canMerge && !canBuild)
+                }else if (canMerge && !canBuild)
                 {
                     if (buildingEntity == null) return;
                     if(mergeTargetInventoryIndexs[0] == -1 || mergeTargetInventoryIndexs[1] == -1 ) return;
                     if (buildingEntity.MergeResult == null) return;
                     InventoryEvents.OnBuildingMergedInvoked(mergeTargetInventoryIndexs[0],mergeTargetInventoryIndexs[1], GetBuildingByIndex(buildingEntity.MergeResult));
                     SelectCancel();
+                }
+                if (canRetrieve)
+                {
+                    if (retrieveGrid == null) return;
+                    BuildingEvents.OnShowBuildingRetrieveInvoked(retrieveGrid);
                 }
             }
 
@@ -133,6 +140,41 @@ namespace _02_Scripts.Building
             gridContainerWrapper.anchoredPosition = localPoint;
             CheckCanBuild();
             CheckMerge();
+
+        }
+
+        private void CheckRetrieve()
+        {
+            if (buildingEntity != null) return;
+            PointerEventData pointerData = new PointerEventData(eventSystem);
+            pointerData.position = Input.mousePosition;
+            List<RaycastResult> results = new List<RaycastResult>();
+            GridtargetGridRaycaster.Raycast(pointerData, results);
+            if (results.Count > 0)
+            {
+                foreach (var result in results)
+                {
+                    GridCell cell = result.gameObject.GetComponent<GridCell>();
+                    if (cell != null)
+                    {
+                        if (cell.Occupied)
+                        {
+                            canRetrieve = true;
+                            retrieveGrid = cell.GetCoordinates();
+                        }
+                        else
+                        {
+                            canRetrieve = false;
+                            retrieveGrid = null;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                canRetrieve = false;
+                retrieveGrid = null;
+            }
         }
 
         private void CheckMerge()

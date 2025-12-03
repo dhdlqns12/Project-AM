@@ -45,6 +45,7 @@ namespace Inventory
             }
             BuildingEvents.OnBuildingConstructedOne += RemoveBuilding;
             InventoryEvents.OnBuildingMerged += MergeBuilding;
+            BuildingEvents.OnBuildingRetrieve += AddBuilding;
         }
 
         public void AddBuilding(BuildingEntity buildingEntity)
@@ -63,9 +64,22 @@ namespace Inventory
 
         private void MergeBuilding(int target1, int target2, BuildingEntity newBuilding)
         {
-            buildingData.RemoveAll(building => building.InventoryIndex == target1 || building.InventoryIndex == target2);
-            AddBuilding(newBuilding);
+            if (target1 == target2) return;
+
+            if (target1 < target2)
+            {
+                buildingData[target2] = newBuilding;
+                buildingData.RemoveAt(target1);
+            }
+            else
+            {
+                buildingData.RemoveAt(target1);
+                buildingData[target2] = newBuilding;
+            }
+            UpdateInventoryUI();
         }
+
+
 
         private void RemoveBuilding(BuildingEntity buildingToRemove)
         {
@@ -104,6 +118,7 @@ namespace Inventory
             }
             BuildingEvents.OnBuildingConstructedOne -= RemoveBuilding;
             InventoryEvents.OnBuildingMerged -= MergeBuilding;
+            BuildingEvents.OnBuildingRetrieve -= AddBuilding;
         }
     }
 }
