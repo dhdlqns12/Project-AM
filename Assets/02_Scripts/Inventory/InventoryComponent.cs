@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _02_Scripts.Building;
 using UnityEngine;
+using UnityEngine.UI;
 using Utils;
 
 namespace Inventory
@@ -13,6 +14,7 @@ namespace Inventory
         [SerializeField] private GameObject inventorySlotPrefab;
         [SerializeField] private int inventorySlotAmount = 16;
         [SerializeField] private GameObject gachaButtonComponent;
+        [SerializeField] private Button gachaButton;
 
         private List<InventorySlot> inventorySlots = new List<InventorySlot>();
         private List<BuildingEntity> buildingData = new List<BuildingEntity>();
@@ -34,12 +36,14 @@ namespace Inventory
             {
                 canvasGroup.alpha = 1;
                 canvas.sortingOrder = 51;
+
             }
             else
             {
                 canvasGroup.alpha = 0;
                 canvas.sortingOrder = 49;
             }
+            gachaButton.interactable = toggle;
             IsOn = toggle;
         }
 
