@@ -4,6 +4,8 @@ public class StageManager : Singleton<StageManager>
 {
     private int gold;
 
+    private const int START_GOLD = 500;
+
     public int Gold
     {
         get => gold;
@@ -16,14 +18,14 @@ public class StageManager : Singleton<StageManager>
         ResetGold();
     }
 
-    public void SetStartGold()
-    {
-        gold = 1000;
-    }
+    // public void SetStartGold()
+    // {
+    //     gold = 1000;
+    // }
 
     public void ResetGold()
     {
-        gold = 0;
+        gold = START_GOLD;
     }
     public void IncreaseGold(int amount)
     {
