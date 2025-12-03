@@ -166,7 +166,6 @@ public class UnitCombat : MonoBehaviour
         if (closestNexus != null)
         {
             currentTargetNexus = closestNexus;
-            Debug.Log($"{unit.Data.Name} → 넥서스 타겟: {currentTargetNexus.Team} Nexus (거리: {closestDistance:F1})");
         }
     }
 
