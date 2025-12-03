@@ -1127,7 +1127,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2596721446928660792
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1228,6 +1228,7 @@ GameObject:
   - component: {fileID: 2304416571477465540}
   - component: {fileID: 442857846041509843}
   - component: {fileID: 2273011819811493945}
+  - component: {fileID: 5959056986425301506}
   m_Layer: 5
   m_Name: TextMoney (TMP)
   m_TagString: Untagged
@@ -1351,6 +1352,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5959056986425301506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8065811840405780437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68fb9845cd9643d4199ef15fcedd5ee0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8072249567942653307
 GameObject:
   m_ObjectHideFlags: 0
