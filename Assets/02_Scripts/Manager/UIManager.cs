@@ -326,11 +326,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
 
     // 메서드 - Game Result 판별 후 UI 활성화 (GameManager 연동 대기)
-    public void OnGameReusltUI()
+    public void OnGameReusltUI(bool gameState)
     {
-        // 임시 변수_게임 상태를 판별할 bool 값    <<- GameManager에서 값 받아오기
-        bool gameState = false;
-
         // 게임에서 승리했을 경우
         if (gameState)
         {
