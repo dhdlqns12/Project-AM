@@ -30,6 +30,11 @@ public class UnitHPVisual : MonoBehaviour
         StartCoroutine(InitializeColors());
     }
 
+    private void OnDisable()
+    {
+        StopCoroutine(InitializeColors());
+    }
+
     private System.Collections.IEnumerator InitializeColors()
     {
         yield return new WaitForEndOfFrame();
