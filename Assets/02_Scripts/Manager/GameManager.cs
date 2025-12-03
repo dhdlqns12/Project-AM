@@ -5,8 +5,6 @@ using UnityEngine.UI;
 public class GameManager :Singleton<GameManager>
 {
     [SerializeField] private AudioManager audioManager;
-    [SerializeField] private Button _button;
-    [SerializeField] private Button _button2;
     public AudioManager AudioManager
     {
         get { return audioManager; }
@@ -25,8 +23,7 @@ public class GameManager :Singleton<GameManager>
 
     private void Start()
     {
-        _button.onClick.AddListener(PlayerDead);
-        _button2.onClick.AddListener(EnemyDead);
+        
     }
 
     //상대, 우리편 불값 분리 조정
