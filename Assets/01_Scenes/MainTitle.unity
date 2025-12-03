@@ -316,11 +316,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 843397d6a8373414a81bbebba8b53ea9, type: 3}
---- !u!1 &571367787 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8080933944998819617, guid: 843397d6a8373414a81bbebba8b53ea9, type: 3}
-  m_PrefabInstance: {fileID: 571367786}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &709374037
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,13 +477,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3951624460627747895, guid: 67084f7ac3978714780a6b064419bed9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 571367787}
     - target: {fileID: 6690771620840382990, guid: 67084f7ac3978714780a6b064419bed9, type: 3}
       propertyPath: m_Name
       value: UITitle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6690771620840382990, guid: 67084f7ac3978714780a6b064419bed9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

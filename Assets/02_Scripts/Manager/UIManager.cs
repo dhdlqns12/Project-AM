@@ -108,7 +108,8 @@ public class UIManager : MonoBehaviour
     
     private void Start()
     {
-        // SwitchCanvas(canvasSelectStage);      // 기능 Test용 메서드, 최종 제출 시 삭제 예정
+        // 선택 중인 Scene 값 갱신_빈 값     <<- Scene 선택을 누르지 않아도 게임 시작 버튼이 눌리지 않도록 의도했습니다.
+        selectedScene = "";
     }
 
 
@@ -168,6 +169,15 @@ public class UIManager : MonoBehaviour
             thisGO = gameObject;
         }
 
+        // 선택 중인 Scene이 없을 경우
+        if (selectedScene == "")
+        {
+            // LogWarning 출력
+            Debug.LogWarning("Scene가 선택되지 않음");
+            // 메서드 종료
+            return;
+        }
+
         // 메서드 호출 - 부모 Object 제외 모두 닫기
         OffSetActiveInChild(thisGO.gameObject);
 
@@ -177,9 +187,8 @@ public class UIManager : MonoBehaviour
         // 조건문 - 매개 변수로 지정된 Object가 'canvasSelectStage'일 경우
         if (go == canvasSelectStage)
         {
-            // 선택 중인 Scene 값 갱신_빈 값     <<- Scene 선택을 누르지 않아도 게임 시작 버튼이 눌리지 않도록 의도했습니다.
+            // 선택 중인 Scene 값 갱신_빈 값
             selectedScene = "";
-                // ㄴ 이것도 Magic String 일까요?..
         }
     }
    
@@ -196,8 +205,8 @@ public class UIManager : MonoBehaviour
 
         Debug.Log(gameManager);
 
-        // Singleton 메서드 호출 - Unity 시간 정지
-        gameManager.StopTime();
+        // Singleton 메서드 호출 - Unity 시간 배속 조정_시간 정지
+        gameManager.AdjustTime(0);
 
         // Option 팝업 활성화
         canvasOptions.SetActive(true);
@@ -231,8 +240,8 @@ public class UIManager : MonoBehaviour
         // Option 팝업 비활성화
         canvasOptions.SetActive(false);
 
-        // Singleton 메서드 호출 - Unity 시간 재생
-        gameManager.ResumeTime();
+        // Singleton 메서드 호출 - Unity 시간 배속 조정_시간 정상화
+        gameManager.AdjustTime(1);
     }
 
 
@@ -317,11 +326,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
 
     // 메서드 - Game Result 판별 후 UI 활성화 (GameManager 연동 대기)
-    public void OnGameReusltUI()
+    public void OnGameReusltUI(bool gameState)
     {
-        // 임시 변수_게임 상태를 판별할 bool 값    <<- GameManager에서 값 받아오기
-        bool gameState = false;
-
         // 게임에서 승리했을 경우
         if (gameState)
         {
@@ -341,6 +347,20 @@ public class UIManager : MonoBehaviour
     {
         gameClear.SetActive(false);
         gameOver.SetActive(false);
+    }
+
+
+    /// <summary>
+    /// GameManager 연관 메서드
+    /// </summary>
+
+    // 메서드 - Game 종료
+    public void QuitGame()
+    {
+        // Singleton_GameManager 참조         <<- 필요한 곳에서 직접 참조하라는 피드백 반영 ("Awake, Start 에서 참조하는 것은 불안정하다")
+        gameManager = GameManager.Instance;
+
+        gameManager.QuitGame();
     }
 
 

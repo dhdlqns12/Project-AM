@@ -8,12 +8,19 @@ public class UnitCombat : MonoBehaviour
     private UnitBase unit;
     private UnitMovement unitMovement;
 
-    private UnitBase currentTarget;
+    private UnitBase currentTargetUnit;
+    private Nexus currentTargetNexus;
     private float attackTimer;
 
     [Header("전투 설정")]
     [SerializeField] private float detectionRange = 10f;  // 감지 범위
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private LayerMask enemyNexusLayer;
+
+    [Header("타게팅 우선순위 설정")]
+    [SerializeField][Tooltip("true: 넥서스 공격 중에도 유닛이 나타나면 즉시 전환\nfalse: 넥서스 공격 중이면 유닛 무시")] private bool firstTargetUnit = true;
+
+    private bool HasTarget => currentTargetUnit != null || currentTargetNexus != null;
 
     public void Init(UnitBase unitBase, UnitMovement movement)
     {
@@ -22,42 +29,40 @@ public class UnitCombat : MonoBehaviour
 
         // 적 레이어 설정
         string enemyLayerName = unit.Team == Team.Player ? "EnemyUnit" : "PlayerUnit";
+        string enemyNexusLayerName = unit.Team == Team.Player ? "EnemyNexus" : "PlayerNexus";
+
         enemyLayer = LayerMask.GetMask(enemyLayerName);
+        enemyNexusLayer = LayerMask.GetMask(enemyNexusLayerName);
     }
+
 
     private void Update()
     {
         if (unit == null || unit.IsDead) return;
 
-        // 1. 타겟 찾기
-        FindClosestTarget();
+        FindTarget();
 
-        if (currentTarget != null)
+        if (HasTarget)
         {
-            // 2. 타겟까지 거리
-            float distanceToTarget = Vector3.Distance(transform.position, currentTarget.transform.position);
+            float distanceToTarget = GetDistanceToTarget();
 
-            // 3. 공격 범위 안이면 → 멈추고 공격
             if (distanceToTarget <= unit.Data.AttackRange)
             {
                 if (unitMovement.IsMoving)
                 {
                     unitMovement.Stop();
-                    Debug.Log($"{unit.Data.Name} 공격 범위 진입! 공격 시작");
                 }
 
                 Attack();
             }
-            // 4. 공격 범위 밖이면 → 타겟 쪽으로 이동 (추격)
             else
             {
-                // ✅ 타겟 위치로 이동 지시
-                unitMovement.MoveTowards(currentTarget.transform.position);
+                Vector3 targetPosition = GetTargetPosition();
+                unitMovement.MoveTowards(targetPosition);
             }
         }
         else
         {
-            // 5. 타겟 없으면 → 기본 방향(좌우)으로 이동
             unitMovement.MoveDefault();
         }
     }
@@ -65,16 +70,30 @@ public class UnitCombat : MonoBehaviour
 
 
     /// <summary>
-    /// 감지 범위 내에서 가장 가까운 적 찾기
+    /// 타겟 찾기 (우선순위 옵션 적용)
     /// </summary>
-    private void FindClosestTarget()
+    private void FindTarget()
     {
-        if (currentTarget != null)
+        if (firstTargetUnit)
         {
-            if (currentTarget.IsDead || !IsInDetectionRange(currentTarget))
+            FindTargetWithUnitPriority();
+        }
+        else
+        {
+            FindTargetKeepCurrent();
+        }
+    }
+
+    /// <summary>
+    /// 방식 1: 항상 유닛 우선 (넥서스 공격 중에도 유닛 발견 시 즉시 전환)
+    /// </summary>
+    private void FindTargetWithUnitPriority()
+    {
+        if (currentTargetUnit != null)
+        {
+            if (currentTargetUnit.IsDead || !IsInDetectionRange(currentTargetUnit.transform.position))
             {
-                currentTarget = null;
-                attackTimer = 0f;
+                currentTargetUnit = null;
             }
             else
             {
@@ -82,16 +101,78 @@ public class UnitCombat : MonoBehaviour
             }
         }
 
+        if (currentTargetNexus != null)
+        {
+            if (currentTargetNexus.IsDestroyed || !IsInDetectionRange(currentTargetNexus.transform.position))
+            {
+                currentTargetNexus = null;
+            }
+        }
+
+        FindClosestUnit();
+
+        if (currentTargetUnit != null)
+        {
+            if (currentTargetNexus != null)
+            {
+                currentTargetNexus = null;
+            }
+            return;
+        }
+
+        if (currentTargetNexus == null)
+        {
+            FindClosestNexus();
+        }
+    }
+
+    /// <summary>
+    /// 방식 2: 현재 타겟 유지 (넥서스 공격 중이면 유닛 무시)
+    /// </summary>
+    private void FindTargetKeepCurrent()
+    {
+        if (currentTargetUnit != null)
+        {
+            if (currentTargetUnit.IsDead || !IsInDetectionRange(currentTargetUnit.transform.position))
+            {
+                currentTargetUnit = null;
+            }
+            else
+            {
+                return; 
+            }
+        }
+
+        if (currentTargetNexus != null)
+        {
+            if (currentTargetNexus.IsDestroyed || !IsInDetectionRange(currentTargetNexus.transform.position))
+            {
+                Debug.Log($"{unit.Data.Name} 넥서스 타겟 해제");
+                currentTargetNexus = null;
+            }
+            else
+            {
+                return; 
+            }
+        }
+
+        FindClosestUnit();
+
+        if (currentTargetUnit == null)
+        {
+            FindClosestNexus();
+        }
+    }
+
+    private void FindClosestUnit()
+    {
         Collider2D[] hits = Physics2D.OverlapCircleAll(
             transform.position,
             detectionRange,
             enemyLayer
         );
 
-        if (hits.Length == 0)
-        {
-            return;
-        }
+        if (hits.Length == 0) return;
 
         UnitBase closestEnemy = null;
         float closestDistance = float.MaxValue;
@@ -114,84 +195,129 @@ public class UnitCombat : MonoBehaviour
 
         if (closestEnemy != null)
         {
-            currentTarget = closestEnemy;
+            currentTargetUnit = closestEnemy;
         }
     }
 
-    /// <summary>
-    /// 타겟이 감지 범위 안에 있는지
-    /// </summary>
-    private bool IsInDetectionRange(UnitBase target)
+    private void FindClosestNexus()
     {
-        if (target == null) return false;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position,detectionRange,enemyNexusLayer);
 
-        float distance = Vector3.Distance(transform.position, target.transform.position);
+        if (hits.Length == 0) return;
+
+        Nexus closestNexus = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (var hit in hits)
+        {
+            Nexus nexus = hit.GetComponent<Nexus>();
+
+            if (nexus != null && !nexus.IsDestroyed)
+            {
+                float distance = Vector3.Distance(transform.position, nexus.transform.position);
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestNexus = nexus;
+                }
+            }
+        }
+
+        if (closestNexus != null)
+        {
+            currentTargetNexus = closestNexus;
+        }
+    }
+
+    private float GetDistanceToTarget()
+    {
+        if (currentTargetUnit != null)
+        {
+            return Vector3.Distance(transform.position, currentTargetUnit.transform.position);
+        }
+        else if (currentTargetNexus != null)
+        {
+            return Vector3.Distance(transform.position, currentTargetNexus.transform.position);
+        }
+        return float.MaxValue;
+    }
+
+    private Vector3 GetTargetPosition()
+    {
+        if (currentTargetUnit != null)
+        {
+            return currentTargetUnit.transform.position;
+        }
+        else if (currentTargetNexus != null)
+        {
+            return currentTargetNexus.transform.position;
+        }
+        return transform.position;
+    }
+
+    private bool IsInDetectionRange(Vector3 position)
+    {
+        float distance = Vector3.Distance(transform.position, position);
         return distance <= detectionRange;
     }
 
-    /// <summary>
-    /// 공격 처리
-    /// </summary>
     private void Attack()
     {
-        if (currentTarget == null) return;
-
         attackTimer += Time.deltaTime;
 
-        // 공격 속도마다 공격
         if (attackTimer >= unit.Data.AttackSpeed)
         {
             attackTimer = 0f;
-
             int damage = unit.CurAtk;
-            currentTarget.TakeDamage(damage);
 
-            Debug.Log($"{unit.Data.Name} -> {currentTarget.Data.Name} 공격! (데미지: {damage}, 남은 HP: {currentTarget.CurHp})");
-
-            // 타겟이 죽었는지 확인
-            if (currentTarget.IsDead)
+            if (currentTargetUnit != null)
             {
-                Debug.Log($"{currentTarget.Data.Name} 처치");
-                currentTarget = null;
-                attackTimer = 0f;
+                currentTargetUnit.TakeDamage(damage);
+
+                if (currentTargetUnit.IsDead)
+                {
+                    Debug.Log($"{currentTargetUnit.Data.Name} 처치!");
+                    currentTargetUnit = null;
+                }
+            }
+            else if (currentTargetNexus != null)
+            {
+                currentTargetNexus.TakeDamage(damage);
+                Debug.Log($"{unit.Data.Name} → {currentTargetNexus.Team} 넥서스 공격! (데미지: {damage})");
+
+                if (currentTargetNexus.IsDestroyed)
+                {
+                    currentTargetNexus = null;
+                }
             }
         }
     }
 
-    /// <summary>
-    /// Gizmos로 범위 표시
-    /// </summary>
     private void OnDrawGizmosSelected()
     {
         if (unit == null) return;
 
-        // 감지 범위 (초록색)
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        // 공격 범위 (노란색)
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, unit.Data.AttackRange);
 
-        // 현재 타겟에게 선 (빨간색)
-        if (currentTarget != null)
+        if (currentTargetUnit != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, currentTarget.transform.position);
+            Gizmos.DrawLine(transform.position, currentTargetUnit.transform.position);
 
-            // 타겟까지의 거리 표시
-            float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
-
-            if (distance <= unit.Data.AttackRange)
+            if (firstTargetUnit)
             {
-                Gizmos.color = Color.red; 
+                Gizmos.DrawWireSphere(currentTargetUnit.transform.position, 0.3f);
             }
-            else
-            {
-                Gizmos.color = Color.green; 
-            }
-
-            Gizmos.DrawWireSphere(currentTarget.transform.position, 0.3f);
+        }
+        else if (currentTargetNexus != null)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(transform.position, currentTargetNexus.transform.position);
         }
     }
 }
