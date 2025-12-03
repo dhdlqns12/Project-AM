@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
@@ -62,6 +63,9 @@ public class UIManager : MonoBehaviour
 
     // 선택 중인 Scene을 판별할 변수 정의
     private string selectedScene;
+
+    // Scene의 이름을 판별할 변수 정의 (Camera 버그 해결에만 사용)
+    // private string sceneName;
 
     private void Awake()
     {
@@ -155,6 +159,33 @@ public class UIManager : MonoBehaviour
         return false;
     }
 
+    // 메서드 - Camera 버그 해결을 위한 메서드
+    private void ChangeIsRunningState()
+    {
+        // Singleton_GameManager 참조         <<- 필요한 곳에서 직접 참조하라는 피드백 반영 ("Awake, Start 에서 참조하는 것은 불안정하다")
+        gameManager = GameManager.Instance;
+
+        // sceneName = SceneManager.GetActiveScene().name;
+
+        // Debug.Log(selectedScene + " / " + sceneName);
+
+        if (selectedScene == "Stage1-1")        // <<- scene 내부에 생성한 Scene 이름을 읽어오는 데 실패하여 magic String으로 대체하였습니다 ㅠㅠ
+        {
+            gameManager.IsRunning = true;
+
+            // Stage 씬 내 정보를 초기화 하는 메서드 (Timer 시간 값 포함)
+            gameManager.ResetStageData();
+
+            Debug.Log("IsRunning: " + gameManager.IsRunning);
+        }
+        else
+        {
+            gameManager.IsRunning = false;
+
+            Debug.Log("IsRunning: " + gameManager.IsRunning);
+        }
+    }
+
 
     /// <summary>
     /// Canvas 전환 관련 메서드
@@ -163,6 +194,7 @@ public class UIManager : MonoBehaviour
     // 메서드 - Canvas 창 전환
     public void SwitchCanvas(GameObject go)
     {
+        // 이 Script를 담은 Object가 null 상태일 경우 (자주 발생하더라고요..)
         if (thisGO == null)
         {
             Debug.Log("thisGO null 상태, 초기화 실행");
@@ -268,6 +300,9 @@ public class UIManager : MonoBehaviour
     {
         // Scene Load_선택 중인 Scene 값
         SceneManager.LoadSceneAsync(selectedScene, LoadSceneMode.Single);
+
+        // 메서드 호출 - Camera 버그 해결을 위한 함수
+        ChangeIsRunningState();
     }
     
     // 메서드 - Scene Load_Additive (Async 활용)
@@ -289,8 +324,18 @@ public class UIManager : MonoBehaviour
             UnloadScene();
         }
 
+        // 시간 값이 1배속이 아니라면
+        if (Time.timeScale != 1)
+        {
+            // 시간 값 갱신_1배속
+            gameManager.AdjustTime(1);
+        }
+
         // Scene Load_선택 중인 Scene 값, 현재 Scene을 유지한 채 아래에 Load
         SceneManager.LoadSceneAsync(selectedScene, LoadSceneMode.Additive);
+
+        // 메서드 호출 - Camera 버그 해결을 위한 함수
+        ChangeIsRunningState();
     }
 
     // 메서드 - Scene Unload (Async 활용)
@@ -331,12 +376,16 @@ public class UIManager : MonoBehaviour
         // 게임에서 승리했을 경우
         if (gameState)
         {
+            // Game Result Canvas 활성화
+            canvasGameResult.SetActive(true);
             // GameClear 호출
             gameClear.SetActive(true);
         }
         // 게임에서 패배했을 경우
         else if(!gameState)
         {
+            // Game Result Canvas 활성화
+            canvasGameResult.SetActive(true);
             // GameOver 호출
             gameOver.SetActive(true);
         }
@@ -345,13 +394,14 @@ public class UIManager : MonoBehaviour
     // 메서드 - Game Result UI 비활성화
     public void OffGameResultUI()
     {
+        canvasGameResult.SetActive(false);
         gameClear.SetActive(false);
         gameOver.SetActive(false);
     }
 
 
     /// <summary>
-    /// GameManager 연관 메서드
+    /// etc 메서드
     /// </summary>
 
     // 메서드 - Game 종료
@@ -360,6 +410,7 @@ public class UIManager : MonoBehaviour
         // Singleton_GameManager 참조         <<- 필요한 곳에서 직접 참조하라는 피드백 반영 ("Awake, Start 에서 참조하는 것은 불안정하다")
         gameManager = GameManager.Instance;
 
+        // 메서드 호출 - 게임 종료
         gameManager.QuitGame();
     }
 
