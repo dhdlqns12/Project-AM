@@ -17,6 +17,9 @@ public class UnitCombat : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask enemyNexusLayer;
 
+    [Header("타게팅 우선순위 설정")]
+    [SerializeField][Tooltip("true: 넥서스 공격 중에도 유닛이 나타나면 즉시 전환\nfalse: 넥서스 공격 중이면 유닛 무시")] private bool firstTargetUnit = true;
+
     private bool HasTarget => currentTargetUnit != null || currentTargetNexus != null;
 
     public void Init(UnitBase unitBase, UnitMovement movement)
@@ -37,7 +40,7 @@ public class UnitCombat : MonoBehaviour
     {
         if (unit == null || unit.IsDead) return;
 
-        FindClosestTarget();
+        FindTarget();
 
         if (HasTarget)
         {
@@ -67,11 +70,25 @@ public class UnitCombat : MonoBehaviour
 
 
     /// <summary>
-    /// 감지 범위 내에서 가장 가까운 타겟 찾기 (유닛 or 넥서스)
+    /// 타겟 찾기 (우선순위 옵션 적용)
     /// </summary>
-    private void FindClosestTarget()
+    private void FindTarget()
     {
-        // 기존 타겟 검증
+        if (firstTargetUnit)
+        {
+            FindTargetWithUnitPriority();
+        }
+        else
+        {
+            FindTargetKeepCurrent();
+        }
+    }
+
+    /// <summary>
+    /// 방식 1: 항상 유닛 우선 (넥서스 공격 중에도 유닛 발견 시 즉시 전환)
+    /// </summary>
+    private void FindTargetWithUnitPriority()
+    {
         if (currentTargetUnit != null)
         {
             if (currentTargetUnit.IsDead || !IsInDetectionRange(currentTargetUnit.transform.position))
@@ -80,7 +97,7 @@ public class UnitCombat : MonoBehaviour
             }
             else
             {
-                return;
+                return;  
             }
         }
 
@@ -90,9 +107,52 @@ public class UnitCombat : MonoBehaviour
             {
                 currentTargetNexus = null;
             }
+        }
+
+        FindClosestUnit();
+
+        if (currentTargetUnit != null)
+        {
+            if (currentTargetNexus != null)
+            {
+                currentTargetNexus = null;
+            }
+            return;
+        }
+
+        if (currentTargetNexus == null)
+        {
+            FindClosestNexus();
+        }
+    }
+
+    /// <summary>
+    /// 방식 2: 현재 타겟 유지 (넥서스 공격 중이면 유닛 무시)
+    /// </summary>
+    private void FindTargetKeepCurrent()
+    {
+        if (currentTargetUnit != null)
+        {
+            if (currentTargetUnit.IsDead || !IsInDetectionRange(currentTargetUnit.transform.position))
+            {
+                currentTargetUnit = null;
+            }
             else
             {
-                return;
+                return; 
+            }
+        }
+
+        if (currentTargetNexus != null)
+        {
+            if (currentTargetNexus.IsDestroyed || !IsInDetectionRange(currentTargetNexus.transform.position))
+            {
+                Debug.Log($"{unit.Data.Name} 넥서스 타겟 해제");
+                currentTargetNexus = null;
+            }
+            else
+            {
+                return; 
             }
         }
 
@@ -104,9 +164,6 @@ public class UnitCombat : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 가장 가까운 적 유닛 찾기
-    /// </summary>
     private void FindClosestUnit()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(
@@ -139,20 +196,12 @@ public class UnitCombat : MonoBehaviour
         if (closestEnemy != null)
         {
             currentTargetUnit = closestEnemy;
-            Debug.Log($"{unit.Data.Name} → 유닛 타겟: {currentTargetUnit.Data.Name} (거리: {closestDistance:F1})");
         }
     }
 
-    /// <summary>
-    /// 가장 가까운 적 넥서스 찾기
-    /// </summary>
     private void FindClosestNexus()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(
-            transform.position,
-            detectionRange,
-            enemyNexusLayer
-        );
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position,detectionRange,enemyNexusLayer);
 
         if (hits.Length == 0) return;
 
@@ -181,9 +230,6 @@ public class UnitCombat : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 타겟까지의 거리
-    /// </summary>
     private float GetDistanceToTarget()
     {
         if (currentTargetUnit != null)
@@ -197,9 +243,6 @@ public class UnitCombat : MonoBehaviour
         return float.MaxValue;
     }
 
-    /// <summary>
-    /// 타겟 위치
-    /// </summary>
     private Vector3 GetTargetPosition()
     {
         if (currentTargetUnit != null)
@@ -219,9 +262,6 @@ public class UnitCombat : MonoBehaviour
         return distance <= detectionRange;
     }
 
-    /// <summary>
-    /// 공격 처리
-    /// </summary>
     private void Attack()
     {
         attackTimer += Time.deltaTime;
@@ -231,25 +271,23 @@ public class UnitCombat : MonoBehaviour
             attackTimer = 0f;
             int damage = unit.CurAtk;
 
-
             if (currentTargetUnit != null)
             {
                 currentTargetUnit.TakeDamage(damage);
 
                 if (currentTargetUnit.IsDead)
                 {
-                    Debug.Log($"{currentTargetUnit.Data.Name} 처치");
+                    Debug.Log($"{currentTargetUnit.Data.Name} 처치!");
                     currentTargetUnit = null;
                 }
             }
-
             else if (currentTargetNexus != null)
             {
                 currentTargetNexus.TakeDamage(damage);
+                Debug.Log($"{unit.Data.Name} → {currentTargetNexus.Team} 넥서스 공격! (데미지: {damage})");
 
                 if (currentTargetNexus.IsDestroyed)
                 {
-                    Debug.Log($"{currentTargetNexus.Team} 넥서스 파괴");
                     currentTargetNexus = null;
                 }
             }
@@ -270,6 +308,11 @@ public class UnitCombat : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, currentTargetUnit.transform.position);
+
+            if (firstTargetUnit)
+            {
+                Gizmos.DrawWireSphere(currentTargetUnit.transform.position, 0.3f);
+            }
         }
         else if (currentTargetNexus != null)
         {
@@ -277,5 +320,4 @@ public class UnitCombat : MonoBehaviour
             Gizmos.DrawLine(transform.position, currentTargetNexus.transform.position);
         }
     }
-
 }
