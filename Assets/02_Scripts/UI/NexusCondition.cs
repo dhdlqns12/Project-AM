@@ -1,13 +1,56 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class NexusCondition : MonoBehaviour
 {
-    // 넥서스 정보를 어떻게 참조해야 하지?
-    // 이렇게 넥서스를 Unity에서 직접 참조해야 하나?
-    [SerializeField] private GameObject nexus;
+    private NexusManager nexusManager;
+
+    [SerializeField] private GameObject playerNexusHPBar;
+    [SerializeField] private GameObject enemyNexusHPBar;
+    [SerializeField] private TextMeshProUGUI playerNexusHPPercentText;
+    [SerializeField] private TextMeshProUGUI enemyNexusHPPercentText;
+
+    private float playerNexusMaxHP;
+    private float playerNexusCurHP;
+    private float playerNexusHPPercent;
+
+    private float enemyNexusMaxHP;
+    private float enemyNexusCurHP;
+    private float enemyNexusHPPercent;
+
+    private void Awake()
+    {
+        if (playerNexusHPBar == null || enemyNexusHPBar == null || playerNexusHPPercentText == null || enemyNexusHPPercentText == null)
+        {
+            Debug.LogError("Nexus 정보가 연동되지 않음");
+        }
+    }
 
     void Update()
     {
-        // 여기서 public 화 된 player 정보를 참조해야 하나?
+        playerNexusMaxHP = NexusManager.Instance.playerNexus.MaxHp;
+        playerNexusCurHP = NexusManager.Instance.playerNexus.CurrentHp;
+
+        enemyNexusMaxHP = NexusManager.Instance.enemyNexus.MaxHp;
+        enemyNexusCurHP = NexusManager.Instance.enemyNexus.CurrentHp;
+
+        UpdateNexusHP();
+        FillAmountUI();
+    }
+
+    private void UpdateNexusHP()
+    {
+        playerNexusHPPercent = ((playerNexusCurHP * 100) / playerNexusMaxHP);
+        enemyNexusHPPercent = ((enemyNexusCurHP * 100) / enemyNexusMaxHP);
+
+        playerNexusHPPercentText.text = playerNexusHPPercent.ToString("F1") + " %";
+        enemyNexusHPPercentText.text = enemyNexusHPPercent.ToString("F1") + " %";
+    }
+
+    private void FillAmountUI()
+    {
+        playerNexusHPBar.GetComponent<Image>().fillAmount = playerNexusHPPercent / 100f;
+        enemyNexusHPBar.GetComponent<Image>().fillAmount = enemyNexusHPPercent / 100f;
     }
 }
