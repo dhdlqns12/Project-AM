@@ -26,7 +26,9 @@ public class ClampCamera : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
 
     private float lastTapTime = 0f;
-    private bool isMovingToCenter = false;
+    private bool isMoveingToInit = false;
+
+    private Vector3 initialPosition;
 
     private void Reset()
     {
@@ -34,7 +36,7 @@ public class ClampCamera : MonoBehaviour
         dragSpeed = 1f;
         smoothTime = 0.15f;
         doubleTapTime = 0.3f;
-        centerMoveSpeed = 30f;
+        centerMoveSpeed = 45f;
         cam = Camera.main;
     }
 
@@ -51,7 +53,7 @@ public class ClampCamera : MonoBehaviour
     {
         HandleDoubleTap();
 
-        if (!isMovingToCenter)
+        if (!isMoveingToInit)
         {
             HandleDragInput();
         }
@@ -73,7 +75,8 @@ public class ClampCamera : MonoBehaviour
         minCameraX = -mapHalfWidth + cameraHalfWidth;
         maxCameraX = mapHalfWidth - cameraHalfWidth;
 
-        cam.transform.position = new Vector3(minCameraX, 0, -10);
+        initialPosition = new Vector3(minCameraX, 0, -10);
+        transform.position = initialPosition;
 
         Debug.Log($"Camera Bounds - Min: {minCameraX}, Max: {maxCameraX}");
     }
@@ -86,7 +89,7 @@ public class ClampCamera : MonoBehaviour
 
             if (timeSinceLastTap <= doubleTapTime)
             {
-                MoveToCenter();
+                MoveToInitPosition();
             }
 
             lastTapTime = Time.time;
@@ -109,7 +112,7 @@ public class ClampCamera : MonoBehaviour
             Vector3 currentPos = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3 difference = drag - currentPos;
 
-            // targetPosition 업데이트 (실제 이동은 SmoothDamp가 처리)
+            // targetPosition 업데이트 -> 실제 이동은 SmoothDamp가 처리
             Vector3 newPos = targetPosition + new Vector3(difference.x * dragSpeed, 0, 0);
             newPos.x = Mathf.Clamp(newPos.x, minCameraX, maxCameraX);
             newPos.y = 0;
@@ -126,45 +129,36 @@ public class ClampCamera : MonoBehaviour
     }
 
     /// <summary>
-    /// 중앙(0, 0)으로 부드럽게 이동
+    /// 초기 위치(플레이어 넥서스)로 부드럽게 이동
     /// </summary>
-    private void MoveToCenter()
+    private void MoveToInitPosition()
     {
         StopAllCoroutines();
-        StartCoroutine(MoveToCenterCoroutine());
+        StartCoroutine(MoveToCameraCoroutine(initialPosition));
     }
 
-    private IEnumerator MoveToCenterCoroutine()
+    private IEnumerator MoveToCameraCoroutine(Vector3 targetPos)
     {
-        isMovingToCenter = true;
+        isMoveingToInit = true;
         isDragging = false;
-
-        Vector3 centerPosition = new Vector3(0, 0, -10);
-
-        // 경계 체크
-        centerPosition.x = Mathf.Clamp(centerPosition.x, minCameraX, maxCameraX);
 
         float elapsedTime = 0f;
         Vector3 startPosition = transform.position;
-        float distance = Vector3.Distance(startPosition, centerPosition);
+        float distance = Vector3.Distance(startPosition, targetPos);
         float duration = distance / centerMoveSpeed;
 
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration;
+            t = t * t * (3f - 2f * t);  // EaseInOut
 
-            // EaseInOut으로 부드럽게
-            t = t * t * (3f - 2f * t);
-
-            targetPosition = Vector3.Lerp(startPosition, centerPosition, t);
+            targetPosition = Vector3.Lerp(startPosition, targetPos, t);
 
             yield return null;
         }
 
-        targetPosition = centerPosition;
-        isMovingToCenter = false;
-
-        Debug.Log("중앙 이동 완료!");
+        targetPosition = targetPos;
+        isMoveingToInit = false;
     }
 }

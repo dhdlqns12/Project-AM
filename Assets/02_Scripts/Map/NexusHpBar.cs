@@ -9,7 +9,7 @@ public class NexusHPBar : MonoBehaviour
     [SerializeField] private Transform hpFill;  
 
     [Header("설정")]
-    [SerializeField] private float barWidth = 2f; 
+    [SerializeField] private float barWidth = 1f; 
 
     private Vector3 originalScale;
 

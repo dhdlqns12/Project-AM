@@ -29,7 +29,6 @@ public abstract class UnitBase : MonoBehaviour
         CurAtk = data.Attack;
         CurDef = data.Defense;
 
-        Debug.Log($"{data.Name} 초기화 (Team: {Team}, Type: {data.Type}, Lv.{data.Level})");
 
         OnInitialized();
 
@@ -67,9 +66,8 @@ public abstract class UnitBase : MonoBehaviour
 
     protected virtual void Die()
     {
-        Debug.Log($"{Data.Name} 사망");
         OnDeath();
-        Destroy(gameObject, 1f);
+        Destroy(gameObject);
     }
 
     /// <summary>

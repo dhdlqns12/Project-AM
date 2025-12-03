@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -25,6 +25,8 @@ public class AudioManager : MonoBehaviour
     
     private Dictionary<string, float> lastSFXPlaytime = new(); // 효과음 쿨타임 계산
     private float coolDownTime = 0.1f;
+    private float warrorCooldownTime = 0.1f;
+    private float archerCoolDownTime = 0.15f;
 
     private Dictionary<string, BgmData> bgmDataDict = new(); //bgm데이터 테이블 로드용
     private Dictionary<string, AudioClip> bgmClipDict = new(); //bgm클립 로드용
@@ -173,9 +175,9 @@ public class AudioManager : MonoBehaviour
 /// </summary>
     public void PlayClickSFX() => PlaySFX("Click", interfaceAudioSource, 0f);
 
-    public void WarriorAttackSFX() => PlaySFX("Warrior_Attack", sfxAudioSource, coolDownTime);
+    public void WarriorAttackSFX() => PlaySFX("Warrior_Attack", sfxAudioSource, warrorCooldownTime);
 
-    public void ArcherAtttackSFX() => PlaySFX("Archer_Attack", sfxAudioSource, coolDownTime);
+    public void ArcherAtttackSFX() => PlaySFX("Archer_Attack", sfxAudioSource, archerCoolDownTime);
 
     public void DamageSFX() => PlaySFX("Damage", sfxAudioSource, coolDownTime);
     public void PlayDeathSFX() => PlaySFX("Death", sfxAudioSource, coolDownTime);

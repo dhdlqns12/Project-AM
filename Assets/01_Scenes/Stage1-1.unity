@@ -519,6 +519,9 @@ MonoBehaviour:
   mapWidth: 120
   cam: {fileID: 1835251665}
   dragSpeed: 1
+  smoothTime: 0.15
+  doubleTapTime: 0.3
+  centerMoveSpeed: 45
 --- !u!114 &1835251668
 MonoBehaviour:
   m_ObjectHideFlags: 0
