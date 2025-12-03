@@ -132,7 +132,8 @@ MonoBehaviour:
     m_Bits: 512
   enemyNexusLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8192
+  firstTargetUnit: 1
 --- !u!50 &-3078323499974090520
 Rigidbody2D:
   serializedVersion: 4
