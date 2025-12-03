@@ -35,13 +35,13 @@ public class PlayerSpawner : MonoBehaviour
     private void OnEnable()
     {
         BuildingEvents.OnBuildingConstructed += OnBuildingConstructed;
-        BuildingEvents.OnBuildingDestroyed += OnBuildingDestroyed;
+        BuildingEvents.OnBuildingRetrieve += OnBuildingDestroyed;
     }
 
     private void OnDisable()
     {
         BuildingEvents.OnBuildingConstructed -= OnBuildingConstructed;
-        BuildingEvents.OnBuildingDestroyed -= OnBuildingDestroyed;
+        BuildingEvents.OnBuildingRetrieve -= OnBuildingDestroyed;
     }
 
     private void Update()
