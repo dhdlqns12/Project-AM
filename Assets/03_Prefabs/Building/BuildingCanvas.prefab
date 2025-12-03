@@ -237,7 +237,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 9999
+  m_SortingOrder: 51
   m_TargetDisplay: 0
 --- !u!114 &5640995170255218592
 MonoBehaviour:
@@ -470,6 +470,7 @@ MonoBehaviour:
   inventorySlotPrefab: {fileID: 2136384602553987405, guid: 370d6d396dbba4f49be5deb13485d640, type: 3}
   inventorySlotAmount: 16
   gachaButtonComponent: {fileID: 3128009103393454936}
+  IsOn: 0
 --- !u!223 &5881569623654863961
 Canvas:
   m_ObjectHideFlags: 0
