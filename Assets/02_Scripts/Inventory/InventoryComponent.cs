@@ -27,7 +27,14 @@ namespace Inventory
 
         public void ToggleInventory(bool toggle)
         {
-            controlPanel.SetActive(toggle);
+            if (toggle)
+            {
+                controlPanel.GetComponent<CanvasGroup>().alpha = 1;
+            }
+            else
+            {
+                controlPanel.GetComponent<CanvasGroup>().alpha = 0;
+            }
         }
 
         void Init()
