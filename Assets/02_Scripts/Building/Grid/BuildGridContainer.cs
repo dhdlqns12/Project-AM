@@ -176,8 +176,26 @@ namespace _02_Scripts.Building.Grid
             {
                 grids[i].Clear();
             }
-            buildingCells.Remove(buildingEntity);
 
+            if (buildingEntity.BuildingType == BuildingType.Farm)
+            {
+                if (buildingEntity.GoldProductionCycle.HasValue && buildingEntity.GoldProductionAmount.HasValue)
+                {
+                    float? cycle = buildingEntity.GoldProductionCycle;
+                    float? amount = buildingEntity.GoldProductionAmount;
+                    if (goldGains.ContainsKey(cycle))
+                    {
+                        goldGains[cycle] -= amount;
+                        if (goldGains[cycle] <= 0)
+                        {
+                            goldGains.Remove(cycle);
+                            goldProductionTimers.Remove(cycle);
+                        }
+                    }
+                }
+
+                buildingCells.Remove(buildingEntity);
+            }
         }
 
 
