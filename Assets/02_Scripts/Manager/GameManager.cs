@@ -4,6 +4,26 @@ using UnityEngine.UI;
 
 public class GameManager :Singleton<GameManager>
 {
+    #region Timer 기능 관련 Property 모음
+
+    // Timer 기능에 사용할 시간 값 정의_Property 형식
+    private float playTime;
+    public float PlayTime       // 외부에서 읽기만 가능
+    {
+        get { return playTime; }
+        private set { playTime = value; }
+    }
+
+    // Timer 기능에서 Stage가 실행중인지 판별할 bool 값 정의_Property 형식
+    private bool isRunning;
+    public bool IsRunning       // 외부에서 읽기 & 쓰기 가능
+    {
+        get { return isRunning; }
+        set { isRunning = value; }
+    }
+
+    #endregion
+
     [SerializeField] private AudioManager audioManager;
     public AudioManager AudioManager
     {
@@ -23,7 +43,12 @@ public class GameManager :Singleton<GameManager>
 
     private void Start()
     {
-        
+        GameStart();
+    }
+
+    private void Update()
+    {
+        GameUpdate();
     }
 
     //상대, 우리편 불값 분리 조정
@@ -63,7 +88,19 @@ public class GameManager :Singleton<GameManager>
 
     public void GameStart()
     {
-        
+        // Scene이 비활성화 상태임
+        isRunning = false;
+    }
+
+    public void GameUpdate()
+    {
+        // Scene이 비활성화 상태일 경우
+        if (!isRunning)
+            // 반환 (아래 코드 무시)
+            return;
+
+        // Timer 기능 동작
+        playTime += Time.deltaTime;
     }
 
     public void PlayerDead()
@@ -100,6 +137,7 @@ public class GameManager :Singleton<GameManager>
     
     public void ResetStageData()
     {
+        playTime = 0f;      // 시간 값 초기화_0(초)
         isPlayerDead = false;
         isEnemyDead  = false;
         StageManager.Instance.ResetGold();
