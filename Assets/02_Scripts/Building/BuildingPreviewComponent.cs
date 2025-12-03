@@ -137,6 +137,7 @@ namespace _02_Scripts.Building
         {
             if (CurrentMouseState == MouseState.NonSelected) return;
             if (!gameObject.activeInHierarchy) return;
+            if(!inventoryComponent.IsOn) return;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 buildingCanvas.transform as RectTransform,
                 Input.mousePosition,
@@ -288,6 +289,7 @@ namespace _02_Scripts.Building
 
         public void SetPreview(BuildingEntity building)
         {
+            if (!inventoryComponent.IsOn) return;
             occupied.Clear();
             buildingEntity = building;
             CurrentMouseState = MouseState.Selected;
