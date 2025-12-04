@@ -470,6 +470,7 @@ MonoBehaviour:
   inventorySlotPrefab: {fileID: 2136384602553987405, guid: 370d6d396dbba4f49be5deb13485d640, type: 3}
   inventorySlotAmount: 16
   gachaButtonComponent: {fileID: 3128009103393454936}
+  gachaButton: {fileID: 544018583423705611}
   IsOn: 0
 --- !u!223 &5881569623654863961
 Canvas:
