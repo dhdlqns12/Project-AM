@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemySpawnerData
 {
@@ -24,7 +25,7 @@ public class EnemySpawnerData
     /// <summary>
     /// 전체 웨이브 데이터를 기준으로 레벨 계산
     /// </summary>
-    public void CalculateLevel(System.Collections.Generic.List<EnemySpawnerData> allWaves)
+    public void CalculateLevel(List<EnemySpawnerData> allWaves)
     {
         UnitLevel = 1;  // 기본 레벨
 
