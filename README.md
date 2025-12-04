@@ -1,3 +1,5 @@
+# ProjectAM(AutoBattler & Merge)
+
 # 유니티 심화 팀프로젝트: 기획에 입각한 프로토타입 제작하기
 
 <img width="2456" height="706" alt="image" src="https://github.com/user-attachments/assets/93436004-353b-4589-88cb-4e40e2d07696" />
