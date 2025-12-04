@@ -97,7 +97,7 @@ public class UnitSpawner : MonoBehaviour
 
         int finalIndex = baseIndex + (level - 1);
 
-        Debug.Log($"FindUnitData: {unitType}, {team}, Lv.{level} → Index {finalIndex}");
+        Debug.Log($"FindUnitData: {unitType}, {team}, Lv.{level} -> Index {finalIndex}");
 
         return UnitDataManager.Instance.GetUnitData(finalIndex);
     }

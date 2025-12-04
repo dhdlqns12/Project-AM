@@ -34,7 +34,7 @@ public class EnemySpawner : MonoBehaviour
         // 테스트용
         if (Input.GetKeyDown(KeyCode.T))
         {
-            gameElapsedTime += 300f;
+            JumpToNextWave();
         }
 
         UpdateSpawnerData();
@@ -138,5 +138,20 @@ public class EnemySpawner : MonoBehaviour
         }
 
         string typeName = unitType == Enums.UnitType.Warrior ? "전사" : "궁수";
+    }
+
+    /// <summary>
+    /// 다음 웨이브 Index로 점프(테스트)
+    /// </summary>
+    private void JumpToNextWave()
+    {
+        int nextIndex = currentSpawnerData.Index + 1;
+
+        EnemySpawnerData nextWave = EnemySpawnerDataManager.Instance.GetSpawnerData(nextIndex);
+
+        if (nextWave != null)
+        {
+            gameElapsedTime = nextWave.TimeMinute;
+        }
     }
 }

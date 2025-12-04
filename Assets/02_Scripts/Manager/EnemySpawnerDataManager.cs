@@ -29,19 +29,23 @@ public class EnemySpawnerDataManager : Singleton<EnemySpawnerDataManager>
             spawnerDataList.Add(data);
         }
 
-        // 시간(초) 순으로 정렬
-        spawnerDataList = spawnerDataList.OrderBy(d => d.TimeSeconds).ToList();
+        spawnerDataList = spawnerDataList.OrderBy(d => d.TimeMinute).ToList();
+
+        foreach (var data in spawnerDataList)
+        {
+            data.CalculateLevel(spawnerDataList);
+        }
 
         Debug.Log($"적 스포너 데이터: {spawnerDataList.Count}개");
 
         foreach (var data in spawnerDataList)
         {
-            Debug.Log($"Index {data.Index}: {data.TimeMinutes:F1}분({data.TimeSeconds}초), Lv{data.UnitLevel}, 주기 {data.SpawnInterval}초");
+            Debug.Log($"웨이브 {data.Index}: {data.TimeMinute}초 → Level {data.UnitLevel}");
         }
     }
 
     /// <summary>
-    /// 현재 게임 시간(초)에 맞는 스포너 데이터 가져오기
+    /// 현재 게임 시간에 맞는 스포너 데이터 가져오기
     /// </summary>
     public EnemySpawnerData GetSpawnerDataByTime(float elapsedSeconds)
     {
@@ -49,7 +53,7 @@ public class EnemySpawnerDataManager : Singleton<EnemySpawnerDataManager>
 
         foreach (var data in spawnerDataList)
         {
-            if (data.TimeSeconds <= elapsedSeconds)
+            if (data.TimeMinute <= elapsedSeconds)
             {
                 result = data;
             }
