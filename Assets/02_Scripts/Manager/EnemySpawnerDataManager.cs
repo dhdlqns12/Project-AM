@@ -37,11 +37,6 @@ public class EnemySpawnerDataManager : Singleton<EnemySpawnerDataManager>
         }
 
         Debug.Log($"적 스포너 데이터: {spawnerDataList.Count}개");
-
-        foreach (var data in spawnerDataList)
-        {
-            Debug.Log($"웨이브 {data.Index}: {data.TimeMinute}초 → Level {data.UnitLevel}");
-        }
     }
 
     /// <summary>
