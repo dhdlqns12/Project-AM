@@ -9,8 +9,8 @@
         "Index": 111,
         "Merge_Result": 112,
         "Produced_Unit_Type": "Warrior",
-        "Unit_Production_Cycle": 7,
-        "Unit_Stat_Multiplier": 1,
+        "Unit_Production_Cycle": 30,
+        "Unit_Stat_Multiplier": null,
         "Units_Per_Cycle": 2
     },
     {
@@ -23,9 +23,9 @@
         "Index": 112,
         "Merge_Result": 113,
         "Produced_Unit_Type": "Warrior",
-        "Unit_Production_Cycle": 5,
-        "Unit_Stat_Multiplier": 1.2,
-        "Units_Per_Cycle": 3
+        "Unit_Production_Cycle": 30,
+        "Unit_Stat_Multiplier": null,
+        "Units_Per_Cycle": 4
     },
     {
         "Building_Coordinate": "(0, 0), (0, 1), (1, 1), (2, 1), (0, 2)",
@@ -37,9 +37,9 @@
         "Index": 113,
         "Merge_Result": null,
         "Produced_Unit_Type": "Warrior",
-        "Unit_Production_Cycle": 3,
-        "Unit_Stat_Multiplier": 1.5,
-        "Units_Per_Cycle": 5
+        "Unit_Production_Cycle": 30,
+        "Unit_Stat_Multiplier": null,
+        "Units_Per_Cycle": 8
     },
     {
         "Building_Coordinate": "(0,0)",
@@ -51,8 +51,8 @@
         "Index": 114,
         "Merge_Result": 115,
         "Produced_Unit_Type": "Archer",
-        "Unit_Production_Cycle": 7,
-        "Unit_Stat_Multiplier": 1,
+        "Unit_Production_Cycle": 30,
+        "Unit_Stat_Multiplier": null,
         "Units_Per_Cycle": 1
     },
     {
@@ -65,9 +65,9 @@
         "Index": 115,
         "Merge_Result": 116,
         "Produced_Unit_Type": "Archer",
-        "Unit_Production_Cycle": 5,
-        "Unit_Stat_Multiplier": 1.2,
-        "Units_Per_Cycle": 2
+        "Unit_Production_Cycle": 30,
+        "Unit_Stat_Multiplier": null,
+        "Units_Per_Cycle": 3
     },
     {
         "Building_Coordinate": "(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)",
@@ -79,17 +79,17 @@
         "Index": 116,
         "Merge_Result": null,
         "Produced_Unit_Type": "Archer",
-        "Unit_Production_Cycle": 3,
-        "Unit_Stat_Multiplier": 1.5,
-        "Units_Per_Cycle": 4
+        "Unit_Production_Cycle": 30,
+        "Unit_Stat_Multiplier": null,
+        "Units_Per_Cycle": 6
     },
     {
         "Building_Coordinate": "(0,0)",
         "Building_Level": 1,
         "Building_Name": "골드 농장 Lv.1",
         "Building_Type": "Farm",
-        "Gold_Production_Amount": 10,
-        "Gold_Production_Cycle": 5,
+        "Gold_Production_Amount": 5,
+        "Gold_Production_Cycle": 1,
         "Index": 117,
         "Merge_Result": 118,
         "Produced_Unit_Type": null,
@@ -102,8 +102,8 @@
         "Building_Level": 2,
         "Building_Name": "골드 농장 Lv.2",
         "Building_Type": "Farm",
-        "Gold_Production_Amount": 20,
-        "Gold_Production_Cycle": 3,
+        "Gold_Production_Amount": 10,
+        "Gold_Production_Cycle": 1,
         "Index": 118,
         "Merge_Result": 119,
         "Produced_Unit_Type": null,
@@ -116,7 +116,7 @@
         "Building_Level": 3,
         "Building_Name": "골드 농장 Lv.3",
         "Building_Type": "Farm",
-        "Gold_Production_Amount": 40,
+        "Gold_Production_Amount": 20,
         "Gold_Production_Cycle": 1,
         "Index": 119,
         "Merge_Result": null,

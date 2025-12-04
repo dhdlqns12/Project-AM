@@ -1,23 +1,23 @@
 [
     {
-        "Archer_Count": 1,
+        "Archer_Count": 4,
         "Index": 200,
         "Spawn_Interval": 30,
         "Time_Minute": 0,
-        "Warrior_Count": 3
+        "Warrior_Count": 8
     },
     {
-        "Archer_Count": 2,
+        "Archer_Count": 10,
         "Index": 201,
         "Spawn_Interval": 30,
-        "Time_Minute": 300,
-        "Warrior_Count": 4
+        "Time_Minute": 100,
+        "Warrior_Count": 15
     },
     {
-        "Archer_Count": 2,
+        "Archer_Count": 20,
         "Index": 202,
         "Spawn_Interval": 30,
-        "Time_Minute": 600,
-        "Warrior_Count": 5
+        "Time_Minute": 200,
+        "Warrior_Count": 30
     }
 ]
