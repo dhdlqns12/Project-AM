@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class GameManager :Singleton<GameManager>
 {
@@ -117,6 +115,8 @@ public class GameManager :Singleton<GameManager>
 
     private void GameOver()
     {
+        AdjustTime(0);
+
         if (isEnemyDead)
         {
             Debug.Log("플레이어 승리");
