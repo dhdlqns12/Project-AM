@@ -1,21 +1,22 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// 유닛 전투 처리
-/// </summary>
 public class UnitCombat : MonoBehaviour
 {
     private UnitBase unit;
     private UnitMovement unitMovement;
 
-    private UnitBase currentTargetUnit;
-    private Nexus currentTargetNexus;
-    private float attackTimer;
-
     [Header("전투 설정")]
-    [SerializeField] private float detectionRange = 10f;  // 감지 범위
+    [SerializeField] private float detectionRange = 10f;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask enemyNexusLayer;
+
+    [Header("타겟팅")]
+    [SerializeField] private float scanInterval = 0.2f;
+
+    private UnitBase currentTargetUnit;
+    private Nexus currentTargetNexus;
+    private float attackTimer = 0f;
+    private float scanTimer = 0f;
 
     private bool HasTarget => currentTargetUnit != null || currentTargetNexus != null;
 
@@ -24,20 +25,25 @@ public class UnitCombat : MonoBehaviour
         unit = unitBase;
         unitMovement = movement;
 
-        // 적 레이어 설정
         string enemyLayerName = unit.Team == Team.Player ? "EnemyUnit" : "PlayerUnit";
         string enemyNexusLayerName = unit.Team == Team.Player ? "EnemyNexus" : "PlayerNexus";
 
         enemyLayer = LayerMask.GetMask(enemyLayerName);
         enemyNexusLayer = LayerMask.GetMask(enemyNexusLayerName);
-    }
 
+        Debug.Log($"{unit.Data.Name} 타겟팅 초기화");
+    }
 
     private void Update()
     {
         if (unit == null || unit.IsDead) return;
 
-        FindTarget();
+        scanTimer += Time.deltaTime;
+        if (scanTimer >= scanInterval)
+        {
+            scanTimer = 0f;
+            FindClosestTarget();
+        }
 
         if (HasTarget)
         {
@@ -65,43 +71,13 @@ public class UnitCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// 타겟 찾기 (항상 유닛 우선)
+    /// 가장 가까운 타겟 찾기 (유닛 우선, 없으면 넥서스)
     /// </summary>
-    private void FindTarget()
+    private void FindClosestTarget()
     {
-        if (currentTargetUnit != null)
-        {
-            if (currentTargetUnit.IsDead || !IsInDetectionRange(currentTargetUnit.transform.position))
-            {
-                currentTargetUnit = null;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        if (currentTargetNexus != null)
-        {
-            if (currentTargetNexus.IsDestroyed || !IsInDetectionRange(currentTargetNexus.transform.position))
-            {
-                currentTargetNexus = null;
-            }
-        }
-
         FindClosestUnit();
 
-        if (currentTargetUnit != null)
-        {
-            if (currentTargetNexus != null)
-            {
-                currentTargetNexus = null;
-            }
-            return;
-        }
-
-        // 유닛 없으면 넥서스
-        if (currentTargetNexus == null)
+        if (currentTargetUnit == null)
         {
             FindClosestNexus();
         }
@@ -111,7 +87,11 @@ public class UnitCombat : MonoBehaviour
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, detectionRange, enemyLayer);
 
-        if (hits.Length == 0) return;
+        if (hits.Length == 0)
+        {
+            currentTargetUnit = null;
+            return;
+        }
 
         UnitBase closestEnemy = null;
         float closestDistance = float.MaxValue;
@@ -132,17 +112,30 @@ public class UnitCombat : MonoBehaviour
             }
         }
 
-        if (closestEnemy != null)
+        if (closestEnemy != null && closestEnemy != currentTargetUnit)
         {
             currentTargetUnit = closestEnemy;
+            currentTargetNexus = null;
+        }
+        else if (closestEnemy == null)
+        {
+            currentTargetUnit = null;
         }
     }
 
     private void FindClosestNexus()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, detectionRange, enemyNexusLayer);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(
+            transform.position,
+            detectionRange,
+            enemyNexusLayer
+        );
 
-        if (hits.Length == 0) return;
+        if (hits.Length == 0)
+        {
+            currentTargetNexus = null;
+            return;
+        }
 
         Nexus closestNexus = null;
         float closestDistance = float.MaxValue;
@@ -153,7 +146,8 @@ public class UnitCombat : MonoBehaviour
 
             if (nexus != null && !nexus.IsDestroyed)
             {
-                float distance = Vector3.Distance(transform.position, nexus.transform.position);
+                Vector3 closestPoint = hit.ClosestPoint(transform.position);
+                float distance = Vector3.Distance(transform.position, closestPoint);
 
                 if (distance < closestDistance)
                 {
@@ -166,6 +160,10 @@ public class UnitCombat : MonoBehaviour
         if (closestNexus != null)
         {
             currentTargetNexus = closestNexus;
+        }
+        else
+        {
+            currentTargetNexus = null;
         }
     }
 
@@ -183,10 +181,7 @@ public class UnitCombat : MonoBehaviour
                 Vector3 closestPoint = nexusCollider.ClosestPoint(transform.position);
                 return Vector3.Distance(transform.position, closestPoint);
             }
-            else
-            {
-                return Vector3.Distance(transform.position, currentTargetNexus.transform.position);
-            }
+            return Vector3.Distance(transform.position, currentTargetNexus.transform.position);
         }
         return float.MaxValue;
     }
@@ -199,15 +194,14 @@ public class UnitCombat : MonoBehaviour
         }
         else if (currentTargetNexus != null)
         {
+            Collider2D nexusCollider = currentTargetNexus.GetComponent<Collider2D>();
+            if (nexusCollider != null)
+            {
+                return nexusCollider.ClosestPoint(transform.position);
+            }
             return currentTargetNexus.transform.position;
         }
         return transform.position;
-    }
-
-    private bool IsInDetectionRange(Vector3 position)
-    {
-        float distance = Vector3.Distance(transform.position, position);
-        return distance <= detectionRange;
     }
 
     private void Attack()
@@ -242,9 +236,6 @@ public class UnitCombat : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 유닛 타입에 따라 공격 효과음 재생
-    /// </summary>
     private void PlayAttackSound()
     {
         if (unit == null) return;
@@ -258,10 +249,36 @@ public class UnitCombat : MonoBehaviour
             case Enums.UnitType.Archer:
                 GameManager.Instance.AudioManager.ArcherAtttackSFX();
                 break;
-
-            default:
-                break;
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        if (unit == null) return;
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, unit.Data.AttackRange);
+
+        if (currentTargetUnit != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, currentTargetUnit.transform.position);
+            Gizmos.DrawWireSphere(currentTargetUnit.transform.position, 0.3f);
+        }
+        else if (currentTargetNexus != null)
+        {
+            Gizmos.color = Color.magenta;
+
+            Collider2D nexusCollider = currentTargetNexus.GetComponent<Collider2D>();
+            if (nexusCollider != null)
+            {
+                Vector3 closestPoint = nexusCollider.ClosestPoint(transform.position);
+                Gizmos.DrawLine(transform.position, closestPoint);
+                Gizmos.DrawWireSphere(closestPoint, 0.2f);
+            }
+        }
+    }
 }

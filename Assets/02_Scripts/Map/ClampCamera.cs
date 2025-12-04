@@ -94,7 +94,6 @@ public class ClampCamera : MonoBehaviour
 
             if (timeSinceLastTap <= doubleTapTime)
             {
-                Debug.LogWarning("더블탭");
                 MoveToInitPosition();
             }
 

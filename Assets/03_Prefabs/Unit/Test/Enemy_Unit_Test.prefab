@@ -370,6 +370,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db8f491e848491d4d97c887812441335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rayDistance: 1.2
+  rayThickness: 0.3
+  allyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  stuckCheckInterval: 0.3
+  stuckThreshold: 0.1
+  maxFallbackAttempts: 7
+  showDebug: 0
+  showGizmos: 1
 --- !u!114 &7414049903238960225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,6 +399,9 @@ MonoBehaviour:
   enemyNexusLayer:
     serializedVersion: 2
     m_Bits: 4096
+  scanInterval: 0.2
+  retargetDistance: 1
+  alwaysTargetClosest: 1
 --- !u!58 &-8783988204649756754
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -423,7 +436,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.45
 --- !u!50 &-1811590642716763372
 Rigidbody2D:
   serializedVersion: 4
