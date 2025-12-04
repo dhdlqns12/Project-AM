@@ -11,7 +11,7 @@
         "Produced_Unit_Type": "Warrior",
         "Unit_Production_Cycle": 30,
         "Unit_Stat_Multiplier": null,
-        "Units_Per_Cycle": 2
+        "Units_Per_Cycle": 3
     },
     {
         "Building_Coordinate": "(0, 0), (0, 1), (0, 2)",
@@ -25,7 +25,7 @@
         "Produced_Unit_Type": "Warrior",
         "Unit_Production_Cycle": 30,
         "Unit_Stat_Multiplier": null,
-        "Units_Per_Cycle": 4
+        "Units_Per_Cycle": 6
     },
     {
         "Building_Coordinate": "(0, 0), (0, 1), (1, 1), (2, 1), (0, 2)",
@@ -39,7 +39,7 @@
         "Produced_Unit_Type": "Warrior",
         "Unit_Production_Cycle": 30,
         "Unit_Stat_Multiplier": null,
-        "Units_Per_Cycle": 8
+        "Units_Per_Cycle": 12
     },
     {
         "Building_Coordinate": "(0,0)",
@@ -53,7 +53,7 @@
         "Produced_Unit_Type": "Archer",
         "Unit_Production_Cycle": 30,
         "Unit_Stat_Multiplier": null,
-        "Units_Per_Cycle": 1
+        "Units_Per_Cycle": 2
     },
     {
         "Building_Coordinate": "(0, 0), (0, 1), (1, 1)",
@@ -67,7 +67,7 @@
         "Produced_Unit_Type": "Archer",
         "Unit_Production_Cycle": 30,
         "Unit_Stat_Multiplier": null,
-        "Units_Per_Cycle": 3
+        "Units_Per_Cycle": 4
     },
     {
         "Building_Coordinate": "(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)",
@@ -81,7 +81,7 @@
         "Produced_Unit_Type": "Archer",
         "Unit_Production_Cycle": 30,
         "Unit_Stat_Multiplier": null,
-        "Units_Per_Cycle": 6
+        "Units_Per_Cycle": 8
     },
     {
         "Building_Coordinate": "(0,0)",
