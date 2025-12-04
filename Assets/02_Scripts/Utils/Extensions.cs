@@ -37,6 +37,7 @@ namespace Utils
 
             return sb.ToString();
 #endif
+            return obj.ToString();
         }
 
         private static void ToDebugStringRecursive(object obj, StringBuilder sb, int indentLevel, HashSet<object> visited)
@@ -140,6 +141,7 @@ namespace Utils
             }
 
             if (!type.IsValueType) visited.Remove(obj);
+
         }
 
         private class ReferenceEqualityComparer : IEqualityComparer<object>
