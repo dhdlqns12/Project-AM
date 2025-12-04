@@ -93,11 +93,11 @@ namespace _02_Scripts.Building
             }
             if (Input.GetMouseButtonDown(0))
             {
-                if (canBuild && !canMerge)
+                if (canBuild && !canMerge && !canRetrieve)
                 {
                     OnBuildingProgress?.Invoke(buildingEntity, targetGrid);
                     SelectCancel();
-                }else if (canMerge && !canBuild)
+                }else if (canMerge && !canBuild && !canRetrieve)
                 {
                     if (buildingEntity == null) return;
                     if(mergeTargetInventoryIndexs[0] == -1 || mergeTargetInventoryIndexs[1] == -1 ) return;
