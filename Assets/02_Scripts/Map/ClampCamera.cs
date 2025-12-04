@@ -85,10 +85,16 @@ public class ClampCamera : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (Time.timeScale == 0)
+            {
+                return;
+            }
+
             float timeSinceLastTap = Time.time - lastTapTime;
 
             if (timeSinceLastTap <= doubleTapTime)
             {
+                Debug.LogWarning("더블탭");
                 MoveToInitPosition();
             }
 
